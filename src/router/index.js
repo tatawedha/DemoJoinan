@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
 // Containers
-const TheContainer = () => import('@/containers/TheContainer')
+const TheContainer = () => import("@/containers/TheContainer");
 
 // Views
-const Dashboard = () => import('@/views/Dashboard')
+const Dashboard = () => import("@/views/Dashboard");
 
 // const Colors = () => import('@/views/theme/Colors')
 // const Typography = () => import('@/views/theme/Typography')
@@ -62,12 +62,11 @@ const Dashboard = () => import('@/views/Dashboard')
 // const Modals = () => import('@/views/notifications/Modals')
 // const Toaster = () => import('@/views/notifications/Toaster')
 
-
 // Views - Pages
-const Page404 = () => import('@/views/pages/Page404')
-const Page500 = () => import('@/views/pages/Page500')
-const Login = () => import('@/views/pages/Login')
-const Register = () => import('@/views/pages/Register')
+const Page404 = () => import("@/views/pages/Page404");
+const Page500 = () => import("@/views/pages/Page500");
+const Login = () => import("@/views/pages/Login");
+const Register = () => import("@/views/pages/Register");
 
 // Users
 // const Users = () => import('@/views/users/Users')
@@ -87,293 +86,57 @@ const Register = () => import('@/views/pages/Register')
 // const Inbox = () => import('@/views/apps/email/Inbox')
 // const Message = () => import('@/views/apps/email/Message')
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'hash', // https://router.vuejs.org/api/#mode
-  linkActiveClass: 'open active',
+  mode: "hash", // https://router.vuejs.org/api/#mode
+  linkActiveClass: "open active",
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
-      path: '/',
-      redirect: '/dashboard',
-      name: 'Home',
+      path: "login",
+      name: "Login",
+      component: Login
+    },
+    {
+      path: "register",
+      name: "Register",
+      component: Register
+    },
+    {
+      path: "/",
+      redirect: "/dashboard",
+      name: "Home",
       component: TheContainer,
       children: [
         {
-          path: 'dashboard',
-          name: 'Dashboard',
+          path: "dashboard",
+          name: "Dashboard",
           component: Dashboard
-        },
-        // {
-        //   path: 'theme',
-        //   redirect: '/theme/colors',
-        //   name: 'Theme',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'colors',
-        //       name: 'Colors',
-        //       component: Colors
-        //     },
-        //     {
-        //       path: 'typography',
-        //       name: 'Typography',
-        //       component: Typography
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'buttons',
-        //   redirect: '/buttons/standard-buttons',
-        //   name: 'Buttons',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'standard-buttons',
-        //       name: 'Standard Buttons',
-        //       component: StandardButtons
-        //     },
-        //     {
-        //       path: 'button-groups',
-        //       name: 'Button Groups',
-        //       component: ButtonGroups
-        //     },
-        //     {
-        //       path: 'dropdowns',
-        //       name: 'Dropdowns',
-        //       component: Dropdowns
-        //     },
-        //     {
-        //       path: 'brand-buttons',
-        //       name: 'Brand Buttons',
-        //       component: BrandButtons
-        //     },
-        //     {
-        //       path: 'loading-buttons',
-        //       name: 'Loading Buttons',
-        //       component: LoadingButtons
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'editors',
-        //   redirect: '/editors/text-editors',
-        //   name: 'Editors',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'text-editors',
-        //       name: 'Text Editors',
-        //       component: TextEditors
-        //     },
-        //     {
-        //       path: 'code-editors',
-        //       name: 'Code Editors',
-        //       component: CodeEditors
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'forms',
-        //   redirect: '/forms/basic-forms',
-        //   name: 'Forms',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'basic-forms',
-        //       name: 'Basic Forms',
-        //       component: BasicForms
-        //     },
-        //     {
-        //       path: 'advanced-forms',
-        //       name: 'Advanced Forms',
-        //       component: AdvancedForms
-        //     },
-        //     {
-        //       path: 'validation-forms',
-        //       name: 'Form Validation',
-        //       component: ValidationForms
-        //     },
-        //     {
-        //       path: 'multi-select',
-        //       name: 'Multiselect',
-        //       component: MultiSelect
-        //     },
-        //   ]
-        // },
-        // {
-        //   path: 'google-maps',
-        //   name: 'Google Maps',
-        //   component: GoogleMaps
-        // },
-        // {
-        //   path: 'icons',
-        //   redirect: '/icons/font-awesome',
-        //   name: 'Icons',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'coreui-icons',
-        //       name: 'CoreUI Icons',
-        //       component: CoreUIIcons
-        //     },
-        //     {
-        //       path: 'flags',
-        //       name: 'Flags',
-        //       component: Flags
-        //     },
-        //     {
-        //       path: 'brands',
-        //       name: 'Brands',
-        //       component: Brands
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'notifications',
-        //   redirect: '/notifications/alerts',
-        //   name: 'Notifications',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'alerts',
-        //       name: 'Alerts',
-        //       component: Alerts
-        //     },
-        //     {
-        //       path: 'badges',
-        //       name: 'Badges',
-        //       component: Badges
-        //     },
-        //     {
-        //       path: 'modals',
-        //       name: 'Modals',
-        //       component: Modals
-        //     },
-        //     {
-        //       path: 'toaster',
-        //       name: 'Toaster',
-        //       component: Toaster
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'plugins',
-        //   redirect: '/plugins/draggable',
-        //   name: 'Plugins',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'draggable',
-        //       name: 'Draggable Cards',
-        //       component: Draggable
-        //     },
-        //     {
-        //       path: 'calendar',
-        //       name: 'Calendar',
-        //       component: Calendar
-        //     },
-        //     {
-        //       path: 'spinners',
-        //       name: 'Spinners',
-        //       component: Spinners
-        //     }
-        //   ]
-        // },
-       
-        // {
-        //   path: 'apps',
-        //   name: 'Apps',
-        //   redirect: '/apps/invoicing/invoice',
-        //   component: {
-        //     render (c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'invoicing',
-        //       redirect: '/apps/invoicing/invoice',
-        //       name: 'Invoicing',
-        //       component: {
-        //         render (c) { return c('router-view') }
-        //       },
-        //       children: [
-        //         {
-        //           path: 'invoice',
-        //           name: 'Invoice',
-        //           component: Invoice
-        //         }
-        //       ]
-        //     }
-        //   ]
-        // }
+        }
       ]
     },
-    // {
-    //   path: '/apps/email',
-    //   redirect: '/apps/email/inbox',
-    //   name: 'Email',
-    //   component: EmailApp,
-    //   children: [{
-    //       path: 'compose',
-    //       name: 'Compose',
-    //       component: Compose
-    //     },
-    //     {
-    //       path: 'inbox',
-    //       name: 'Inbox',
-    //       component: Inbox
-    //     },
-    //     {
-    //       path: 'message',
-    //       name: 'Message',
-    //       component: Message
-    //     }
-    //   ]
-    // },
     {
-      path: '/pages',
-      redirect: '/pages/404',
-      name: 'Pages',
+      path: "/pages",
+      redirect: "/pages/404",
+      name: "Pages",
       component: {
-        render (c) { return c('router-view') }
+        render(c) {
+          return c("router-view");
+        }
       },
       children: [
         {
-          path: '404',
-          name: 'Page404',
+          path: "404",
+          name: "Page404",
           component: Page404
         },
         {
-          path: '500',
-          name: 'Page500',
+          path: "500",
+          name: "Page500",
           component: Page500
-        },
-        {
-          path: 'login',
-          name: 'Login',
-          component: Login
-        },
-        {
-          path: 'register',
-          name: 'Register',
-          component: Register
         }
       ]
     }
   ]
-})
+});
