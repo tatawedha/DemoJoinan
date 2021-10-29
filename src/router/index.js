@@ -89,17 +89,17 @@ const Register = () => import("@/views/pages/Register");
 Vue.use(Router);
 
 export default new Router({
-  mode: "hash", // https://router.vuejs.org/api/#mode
+  mode: "history", // https://router.vuejs.org/api/#mode
   linkActiveClass: "open active",
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
-      path: "login",
+      path: "/login",
       name: "Login",
       component: Login
     },
     {
-      path: "register",
+      path: "/register",
       name: "Register",
       component: Register
     },
