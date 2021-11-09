@@ -1,5 +1,8 @@
 <template>
-  <div class="c-app flex-row align-items-center" :class="{ 'c-dark-theme': $store.state.darkMode }">
+  <div
+    class="c-app flex-row align-items-center"
+    :class="{ 'c-dark-theme': $store.state.darkMode }"
+  >
     <CContainer>
       <CRow class="justify-content-center">
         <CCol md="8">
@@ -7,34 +10,42 @@
             <CCard class="p-4">
               <CCardBody>
                 <CForm>
-                  <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
-                  <CInput
-                    placeholder="Username"
-                    autocomplete="username email"
-                  >
-                    <template #prepend-content><CIcon name="cil-user"/></template>
+                  <h1 class="text-center text-muted">Brainwave Login</h1>
+                  <!-- <p class="text-muted">Masuk</p> -->
+                  <CInput placeholder="Username" autocomplete="username">
+                    <template #prepend-content
+                      ><CIcon name="cil-user"
+                    /></template>
                   </CInput>
                   <CInput
                     placeholder="Password"
                     type="password"
                     autocomplete="curent-password"
+                    @keyup.enter.prevent="login()"
                   >
-                    <template #prepend-content><CIcon name="cil-lock-locked"/></template>
+                    <template #prepend-content
+                      ><CIcon name="cil-lock-locked"
+                    /></template>
                   </CInput>
                   <CRow>
-                    <CCol col="6" class="text-left">
-                      <CButton color="primary" class="px-4">Login</CButton>
+                    <CCol col="12" class="text-center mt-4">
+                      <CButton
+                        color="warning"
+                        class="px-4 text-white"
+                        block
+                        @click="login()"
+                        >LOGIN</CButton
+                      >
                     </CCol>
-                    <CCol col="6" class="text-right">
+                    <!-- <CCol col="6" class="text-right">
                       <CButton color="link" class="px-0">Forgot password?</CButton>
                       <CButton color="link" class="d-lg-none">Register now!</CButton>
-                    </CCol>
+                    </CCol> -->
                   </CRow>
                 </CForm>
               </CCardBody>
             </CCard>
-            <CCard
+            <!-- <CCard
               color="primary"
               text-color="white"
               class="text-center py-5 d-md-down-none"
@@ -51,16 +62,99 @@
                   Register Now!
                 </CButton>
               </CCardBody>
-            </CCard>
+            </CCard> -->
           </CCardGroup>
         </CCol>
       </CRow>
+
+      <CModal
+        title="Berhasil Login"
+        size="sm"
+        :show.sync="myModal1"
+        hide-footer
+        centered
+      >
+        <CCol col="12" class="text-center">
+          <CButton @click="(myModal = false), lanjut()" :color="color" block
+            >Masuk</CButton
+          >
+        </CCol>
+        <template #footer-wrapper> <span></span> </template>
+      </CModal>
+
+      <CModal
+        title="Terjadi Kesalahan"
+        size="sm"
+        :show.sync="myModal2"
+        hide-footer
+        centered
+      >
+        <h4 class="text-muted text-warning">{{msg}}</h4>
+        <template #footer-wrapper> <span></span> </template>
+      </CModal>
     </CContainer>
   </div>
 </template>
 
 <script>
+import { ipBackend } from "@/ipBackend";
+import axios from "axios";
+import { setToken } from "@/store/utils/auth.js";
 export default {
-  name: 'Login'
-}
+  name: "Login",
+  data() {
+    return {
+      username: "",
+      password: "",
+      button: "LOGIN",
+      busy: false,
+      myModal1: false,
+      myModal2:false,
+      msg: "",
+      color: ""
+    };
+  },
+  // beforeMount() {
+  //   if (localStorage.getItem("token")) {
+  //     this.$router.push({ path: "/" });
+  //   }
+  // },
+  methods: {
+    async login() {
+      let vm = this;
+      vm.busy = true;
+      let login = await axios.post(ipBackend + "users/login", {
+        username: vm.username,
+        password: vm.password
+      });
+      console.log(login);
+      if (login.data.status == 200) {
+        if (login.data.message == "sukses") {
+          vm.button = "LOGIN";
+          vm.busy = false;
+          localStorage.setItem("token", login.data.token);
+          setToken(login.data.token);
+          vm.myModal1 = true;
+          vm.msg = "Login Berhasil";
+          vm.color = "success";
+        } else {
+          vm.button = "LOGIN";
+          vm.busy = false;
+          vm.myModal2 = true;
+          vm.msg = login.data.message;
+          vm.color = "danger";
+        }
+      } else {
+        vm.button = "LOGIN";
+        vm.busy = false;
+        vm.myModal2 = true;
+        vm.msg = login.data.message;
+        vm.color = "warning";
+      }
+    },
+    lanjut() {
+      this.$router.push({ path: "/" });
+    }
+  }
+};
 </script>
