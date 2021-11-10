@@ -8,12 +8,8 @@
     >
       <CIcon name="cil-trash" />
     </CButton>
-    <CModal
-      title="Hapus Magang"
-      size="lg"
-      :show.sync="myModal"
-    >
-      <H4>Apakah Anda Yakin Menghapus Data Magang?</H4>
+    <CModal title="Hapus Magang" size="lg" :show.sync="myModal">
+      <H4>Apakah Anda Yakin Menghapus Data Pasien?</H4>
       <template #footer>
         <CCol col="6" class="text-center">
           <CButton @click="(myModal = false), hapus(item.id)" color="success"
@@ -43,14 +39,11 @@ export default {
     tembak() {
       this.$emit("tembak");
     },
-    hapus(x) {
-      axios
-        .post(
-          ipBackEnd + "users/delete",
-          {
-            id: x
-          },
-        )
+    async hapus(x) {
+      let hapus = await axios
+        .post(ipBackEnd + "users/delete", {
+          id: x
+        })
         .then(res => {
           console.log(res);
           this.tembak();

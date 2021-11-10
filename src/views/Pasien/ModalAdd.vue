@@ -17,12 +17,6 @@
             <CForm>
               <CInput label="Username" horizontal :value.sync="data.username" />
               <CInput label="Password" horizontal :value.sync="data.password" />
-              <CSelect
-                :options="peran"
-                label="Peran"
-                horizontal
-                :value.sync="data.role"
-              />
               <CInput label="Nama" horizontal :value.sync="data.nama" />
               <CSelect
                 :options="jk"
@@ -59,14 +53,26 @@
                 horizontal
                 :value.sync="data.pekerjaan"
               />
-              <CTextarea label="Alamat" horizontal :value.sync="data.Alamat" />
+              <CTextarea label="Alamat" horizontal :value.sync="data.alamat" />
             </CForm>
+            <CInputFile
+              accept="image/jpeg, image/png, image/gif"
+              label="Foto"
+              id="file1"
+              custom
+              horizontal
+              ref="file1"
+              @change="handleFile()"
+              :placeholder="place()"
+            />
           </CCol>
         </CRow>
         <CRow class="mb-3 mt-4">
           <CCol></CCol>
           <CCol class="col-md-4">
-            <CButton color="primary" block @click="regis()">DAFTAR</CButton>
+            <CButton block @click="regis()" color="success" :disabled="busy">
+              <CSpinner v-if="busy" size="sm" /> DAFTAR</CButton
+            >
           </CCol>
           <CCol></CCol>
         </CRow>
@@ -82,17 +88,20 @@ import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
+import moment from "moment";
+import "moment/locale/id";
 export default {
   name: "ModalAdd",
   components: {},
   props: [],
   data() {
     return {
+      moment,
       data: {
         username: "",
         password: "",
         nama: "",
-        role: "",
+        role: "Pasien",
         jenisKelamin: "",
         tanggalLahir: "",
         golonganDarah: "",
@@ -102,6 +111,9 @@ export default {
         alamat: "",
         file1: ""
       },
+      src1: "",
+      timeout: 4000,
+      busy: false,
       jk: [
         { value: null, label: "" },
         { value: "Laki-laki", label: "Laki-laki" },
@@ -132,33 +144,60 @@ export default {
     tembak() {
       this.$emit("tembak");
     },
+    handleFile() {
+      this.data.file1 = this.$refs.file1.$data.state[0];
+      this.src1 = URL.createObjectURL(this.data.file1);
+    },
     sendDate(x) {
       return moment(x).format("YYYY/MM/DD");
     },
     async regis() {
       let vm = this;
-      let x = vm.sendDate(vm.data.tanggalLahir);
-      vm.data.tanggalLahir = x;
+      vm.busy = true;
+      let formData = new FormData();
+      formData.append("username", vm.data.username);
+      formData.append("password", vm.data.password);
+      formData.append("nama", vm.data.nama);
+      formData.append("jenisKelamin", vm.data.jenisKelamin);
+      formData.append("alamat", vm.data.alamat);
+      formData.append("tinggiBadan", vm.data.tinggiBadan);
+      formData.append("beratBadan", vm.data.beratBadan);
+      formData.append("golonganDarah", vm.data.golonganDarah);
+      formData.append("tanggalLahir", vm.sendDate(vm.data.tanggalLahir));
+      formData.append("file1", vm.data.file1);
+      formData.append("role", vm.data.role);
+      formData.append("pekerjaan", vm.data.pekerjaan);
       let regis = await axios.post(ipBackend + "users/register", vm.data);
 
       console.log(regis);
       if (regis.data.status == 200) {
-        if (res.data.message == "sukses") {
+        if (regis.data.message == "sukses") {
+          vm.busy = false;
           vm.$emit("go", {
             msg: "PENDAFTARAN USER BERHASIL",
             color: "success"
           });
+          vm.myModal = false;
         } else {
+          vm.busy = false;
           vm.$emit("go", {
-            msg: res.data.message.toUpperCase(),
+            msg: regis.data.message.toUpperCase(),
             color: "warning"
           });
         }
       } else {
+        vm.busy = false;
         vm.$emit("go", {
           msg: "TERJADI KESALAHAN PADA SERVER",
           color: "danger"
         });
+      }
+    },
+    place() {
+      if (this.data.file1 == "") {
+        return "Pilih File";
+      } else {
+        return this.data.file1.name;
       }
     }
   }

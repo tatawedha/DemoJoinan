@@ -7,7 +7,7 @@
             <dl class="row">
               <dt class="col-sm-10">DAFTAR PASIEN</dt>
               <dd class="col-sm-2">
-                <ModalAdd @tembak="getPasien()" />
+                <ModalAdd @go="alert($event)" />
               </dd>
             </dl>
           </CCardHeader>
@@ -34,9 +34,9 @@
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
-                      <ModalListA :item="item" />
-                      <ModalEdit :item="item" />
-                      <ModalDelete :item="item" />
+                      <ModalListA :item="item" @go="alert($event)" />
+                      <ModalEdit :item="item" @go="alert($event)" />
+                      <ModalDelete :item="item" @go="alert($event)" />
                     </td>
                   </template>
                 </CDataTable>
@@ -46,16 +46,19 @@
         </CCard>
       </CCol>
     </CRow>
-    <Cmodal :show.sync="notif" title="" size="sm">
+    <CModal :show.sync="notif" title="" size="sm" centered>
       <CRow>
-        <CCol>
-          <CButton :color="color">{{ msg }}</CButton>
+        <CCol align="center">
+          <CButton :color="color" @click="notif = false">{{ msg }}</CButton>
         </CCol>
       </CRow>
+      <template #header-wrapper>
+        <span></span>
+      </template>
       <template #footer-wrapper>
         <span></span>
       </template>
-    </Cmodal>
+    </CModal>
   </CContainer>
 </template>
 
@@ -151,11 +154,12 @@ export default {
         this.collapseDuration = 0;
       });
     },
-    setNotif(x) {
+    alert(x) {
+      let vm = this;
+      this.getPasien();
       vm.notif = true;
       vm.msg = x.msg;
-      color = x.color;
-      this.getPasien();
+      vm.color = x.color;
     }
   }
 };

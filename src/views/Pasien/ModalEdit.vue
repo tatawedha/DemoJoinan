@@ -11,7 +11,7 @@
           <CIcon name="cil-pencil" />
         </CButton>
       </CCol>
-      <CModal title="Edit Pasien " size="lg" :show.sync="myModal">
+      <CModal title="Edit Pasien " size="lg" :show.sync="myModal" align="left">
         <CRow>
           <CCol>
             <CForm>
@@ -26,9 +26,9 @@
                 type="date"
                 label="Tanggal Lahir"
                 horizontal
-                :value="moment(item.tanggalLahir).format('dd/mm/yyyy')"
+                :value="dates(item.tanggalLahir)"
+                @change="getDate($event)"
               />
-
               <CSelect
                 :options="gd"
                 label="Golongan Darah"
@@ -51,13 +51,25 @@
                 :value.sync="item.pekerjaan"
               />
               <CTextarea label="Alamat" horizontal :value.sync="item.alamat" />
+              <CInputFile
+                accept="image/jpeg, image/png, image/gif"
+                label="Foto"
+                id="file1"
+                custom
+                horizontal
+                ref="file1"
+                @change="handleFile()"
+                :placeholder="place()"
+              />
             </CForm>
           </CCol>
         </CRow>
         <CRow class="mb-3 mt-4">
           <CCol></CCol>
           <CCol class="col-md-4">
-            <CButton color="primary" block @click="regis()">DAFTAR</CButton>
+            <CButton @click="update()" color="success" :disabled="busy" block>
+              <CSpinner v-if="busy" size="sm" /> SIMPAN
+            </CButton>
           </CCol>
           <CCol></CCol>
         </CRow>
@@ -73,12 +85,19 @@ import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
+import moment from "moment";
+import "moment/locale/id";
 export default {
   name: "ModalAdd",
   components: {},
   props: ["item"],
   data() {
     return {
+      moment,
+      busy: false,
+      file1: "",
+      src1: "",
+      lahir: "",
       jk: [
         { value: null, label: "" },
         { value: "Laki-laki", label: "Laki-laki" },
@@ -109,33 +128,71 @@ export default {
     tembak() {
       this.$emit("tembak");
     },
+    handleFile() {
+      this.file1 = this.$refs.file1.$data.state[0];
+      this.src1 = URL.createObjectURL(this.file1);
+      console.log(this.file1);
+    },
     sendDate(x) {
       return moment(x).format("YYYY/MM/DD");
     },
-    async regis() {
+    dates(val) {
+      return moment(val).format("YYYY-MM-DD");
+    },
+    getDate: function(x) {
+      this.lahir = x;
+    },
+    async update() {
       let vm = this;
-      let x = vm.sendDate(vm.item.tanggalLahir);
-      vm.item.tanggalLahir = x;
-      let regis = await axios.post(ipBackend + "users/update", vm.item);
+      let formData = new FormData();
+      let x = vm.sendDate(vm.lahir);
+      vm.busy = true;
+      formData.append("id", vm.item.id);
+      formData.append("nama", vm.item.nama);
+      formData.append("jenisKelamin", vm.item.jenisKelamin);
+      formData.append("alamat", vm.item.alamat);
+      formData.append("tinggiBadan", vm.item.tinggiBadan);
+      formData.append("beratBadan", vm.item.beratBadan);
+      formData.append("golonganDarah", vm.item.golonganDarah);
+      if (lahir) {
+        formData.append("tanggalLahir", x);
+      }
+      if (vm.file1) {
+        formData.append("file1", vm.file1);
+      }
+      formData.append("role", vm.item.role);
+      formData.append("pekerjaan", vm.item.pekerjaan);
+      let update = await axios.post(ipBackend + "users/update", formData);
 
-      console.log(regis);
-      if (regis.data.status == 200) {
-        if (res.data.message == "sukses") {
+      console.log(update);
+      if (update.data.status == 200) {
+        if (update.data.message == "sukses") {
           vm.$emit("go", {
-            msg: "PENDAFTARAN USER BERHASIL",
+            msg: "UPDATE PASIEN BERHASIL",
             color: "success"
           });
+          vm.busy = false;
+          vm.myModal = false;
         } else {
           vm.$emit("go", {
             msg: res.data.message.toUpperCase(),
             color: "warning"
           });
+          vm.busy = false;
         }
       } else {
         vm.$emit("go", {
           msg: "TERJADI KESALAHAN PADA SERVER",
           color: "danger"
         });
+        vm.busy = false;
+      }
+    },
+    place() {
+      if (this.file1 == "") {
+        return "Pilih File";
+      } else {
+        return this.file1.name;
       }
     }
   }
