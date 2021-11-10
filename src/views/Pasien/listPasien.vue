@@ -34,8 +34,9 @@
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
-                      <ModalDelete :hapus="hapus" :item="item" />
-                      <ModalListA />
+                      <ModalListA :item="item" />
+                      <ModalEdit :item="item" />
+                      <ModalDelete :item="item" />
                     </td>
                   </template>
                 </CDataTable>
@@ -45,7 +46,16 @@
         </CCard>
       </CCol>
     </CRow>
-    
+    <Cmodal :show.sync="notif" title="" size="sm">
+      <CRow>
+        <CCol>
+          <CButton :color="color">{{ msg }}</CButton>
+        </CCol>
+      </CRow>
+      <template #footer-wrapper>
+        <span></span>
+      </template>
+    </Cmodal>
   </CContainer>
 </template>
 
@@ -54,7 +64,7 @@ import axios from "axios";
 import { ipBackend } from "@/ipBackend";
 import ModalAdd from "@/views/Pasien/ModalAdd";
 import ModalDelete from "@/views/Pasien/ModalDelete";
-import ModalPublish from "@/views/Pasien/ModalPublish";
+import ModalEdit from "@/views/Pasien/ModalEdit";
 // import ModalDetail from "@/views/Pasien/ModalDetail";
 import ModalListA from "@/views/Pasien/ModalListA";
 import moment from "moment";
@@ -99,8 +109,7 @@ export default {
   components: {
     ModalAdd,
     ModalDelete,
-    ModalPublish,
-    // ModalDetail,
+    ModalEdit,
     ModalListA
   },
   data() {
@@ -108,15 +117,18 @@ export default {
       usersData: [],
       fields,
       hapus: false,
-      collapseDuration: 0
+      collapseDuration: 0,
+      notif: false,
+      msg: "",
+      color: ""
     };
   },
   created() {
     this.getPasien();
   },
   methods: {
-    show(){
-      console.log(this.hapus)
+    show() {
+      console.log(this.hapus);
     },
     getStatus(val) {
       if (val == 0) {
@@ -125,73 +137,12 @@ export default {
         return "Sedang di Publikasi";
       }
     },
-    getPasien() {
-      axios
-        .get(ipBackend + "users/listByRole/Pasien", {})
-        .then(res => {
-          console.log(res, "inimagang");
-          this.usersData = res.data.data.map(item => {
-            return { ...item, list: [] };
-          });
-          console.log("pew pew");
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    getlistM(x, y) {
-      console.log(x);
-      axios
-        .get(ipBackEnd + "poolMagang/listUsersUnAccepted/" + x, {
-          headers: {
-            token: localStorage.getItem("tokenAdmin")
-          }
-        })
-        .then(res => {
-          console.log(res);
-          this.usersData[y].list = res.data.data.map(item => {
-            return { ...item, index: y, judulMagang: x.judulMagang };
-          });
-        })
-        .catch(err => {
-          console.log(res);
-        });
-    },
-    accept(x) {
-      console.log(x);
-      let tempIndex = x.index;
-      let tempMId = x.magangId;
-      console.log(x, x.index, "ini accept");
-      axios
-        .post(ipBackEnd + "poolMagang/accept", x, {
-          headers: {
-            token: localStorage.getItem("tokenAdmin")
-          }
-        })
-        .then(res => {
-          console.log(res);
-          this.getlistM(tempMId, tempIndex);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    reject(x) {
-      let tempIndex = x.index;
-      let tempMId = x.magangId;
-      axios
-        .post(ipBackEnd + "poolMagang/reject", x, {
-          headers: {
-            token: localStorage.getItem("tokenAdmin")
-          }
-        })
-        .then(res => {
-          console.log(res);
-          this.getlistM(tempMId, tempIndex);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    async getPasien() {
+      let pasien = await axios.get(ipBackend + "users/listByRole/Pasien");
+      console.log(pasien.data.data);
+      this.usersData = pasien.data.data.map(item => {
+        return { ...item };
+      });
     },
     toggleDetails(item, index) {
       this.$set(item, "_toggled", !item._toggled);
@@ -199,6 +150,12 @@ export default {
       this.$nextTick(() => {
         this.collapseDuration = 0;
       });
+    },
+    setNotif(x) {
+      vm.notif = true;
+      vm.msg = x.msg;
+      color = x.color;
+      this.getPasien();
     }
   }
 };

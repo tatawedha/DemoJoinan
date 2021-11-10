@@ -12,7 +12,11 @@
                 <CForm>
                   <h1 class="text-center text-muted">Brainwave Login</h1>
                   <!-- <p class="text-muted">Masuk</p> -->
-                  <CInput placeholder="Username" autocomplete="username">
+                  <CInput
+                    placeholder="Username"
+                    autocomplete="username"
+                    :value.sync="username"
+                  >
                     <template #prepend-content
                       ><CIcon name="cil-user"
                     /></template>
@@ -21,6 +25,7 @@
                     placeholder="Password"
                     type="password"
                     autocomplete="curent-password"
+                    :value.sync="password"
                     @keyup.enter.prevent="login()"
                   >
                     <template #prepend-content
@@ -89,7 +94,7 @@
         hide-footer
         centered
       >
-        <h4 class="text-muted text-warning">{{msg}}</h4>
+        <h4 class="text-strong text-warning mt-4 mb-4">{{ msg }}</h4>
         <template #footer-wrapper> <span></span> </template>
       </CModal>
     </CContainer>
@@ -109,7 +114,7 @@ export default {
       button: "LOGIN",
       busy: false,
       myModal1: false,
-      myModal2:false,
+      myModal2: false,
       msg: "",
       color: ""
     };
@@ -135,20 +140,20 @@ export default {
           localStorage.setItem("token", login.data.token);
           setToken(login.data.token);
           vm.myModal1 = true;
-          vm.msg = "Login Berhasil";
+          vm.msg = "LOGIN BERHASIL";
           vm.color = "success";
         } else {
           vm.button = "LOGIN";
           vm.busy = false;
           vm.myModal2 = true;
-          vm.msg = login.data.message;
+          vm.msg = login.data.message.toUpperCase();
           vm.color = "danger";
         }
       } else {
         vm.button = "LOGIN";
         vm.busy = false;
         vm.myModal2 = true;
-        vm.msg = login.data.message;
+        vm.msg = "TERJADI KESALAHAN PADA SERVER";
         vm.color = "warning";
       }
     },
