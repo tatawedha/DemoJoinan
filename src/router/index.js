@@ -13,6 +13,8 @@ const Page500 = () => import("@/views/pages/Page500");
 const Login = () => import("@/views/pages/Login");
 const Register = () => import("@/views/pages/Register");
 const Pasien = () => import("@/views/Pasien/listPasien");
+const Dokter = () => import("@/views/Dokter/listDokter");
+const Jadwal = () => import("@/views/Jadwal/listJadwal");
 
 Vue.use(Router);
 
@@ -46,12 +48,17 @@ const router = new Router({
           path: "pasien",
           name: "Pasien",
           component: Pasien
+        },
+        {
+          path: "dokter",
+          name: "Dokter",
+          component: Dokter
+        },
+        {
+          path: "jadwal",
+          name: "Jadwal",
+          component: Jadwal
         }
-        // {
-        //   path: "users",
-        //   name: "Users",
-        //   component: Users
-        // }
       ]
     },
     {

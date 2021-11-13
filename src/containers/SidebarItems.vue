@@ -26,8 +26,20 @@ export default {
                   name: "Pasien",
                   to: "/pasien",
                   icon: "cil-layers"
+                },
+                {
+                  _name: "CSidebarNavItem",
+                  name: "Dokter",
+                  to: "/dokter",
+                  icon: "cil-layers"
                 }
               ]
+            },
+            {
+              _name: "CSidebarNavItem",
+              name: "Jadwal",
+              to: "/jadwal",
+              icon: "cil-layers"
             },
             {
               _name: "CSidebarNavDivider"

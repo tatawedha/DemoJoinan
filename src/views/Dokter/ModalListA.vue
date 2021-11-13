@@ -11,9 +11,9 @@
           <CIcon name="cil-User" />
         </CButton>
       </CCol>
-      <CModal title="Detail Pasiena" size="lg" :show.sync="myModal">
+      <CModal title="Detail Dokter" size="lg" :show.sync="myModal">
         <CTabs>
-          <CTab title="Biodata Pasien" active>
+          <CTab title="Biodata Dokter" active>
             <CCard>
               <div class="bd-example text-left mt-4 mb-4">
                 <dl class="row">
@@ -35,17 +35,21 @@
               </div>
             </CCard>
           </CTab>
-          <CTab title="Riwayat Scanning">
+          <CTab title="Jadwal Dokter">
             <CDataTable :items="listA" :fields="fields" hover sorter cleaner>
               <template #No="{index}">
                 <td class="text-center">
                   {{ index + 1 }}
                 </td>
-              </template></CDataTable
-            >
+              </template>
+              <template #tanggalJadwal="{item}">
+                <td class="text-center">
+                  {{ moment(item.tanggalJadwal).format("ll") }}
+                </td>
+              </template>
+            </CDataTable>
           </CTab>
         </CTabs>
-
         <template #footer-wrapper>
           <span></span>
         </template>
@@ -61,15 +65,13 @@ import "moment/locale/id";
 
 const fields = [
   { key: "No", label: "No", _style: "width:1%" },
-  { key: "nama", label: "Nama", _style: "min-width:40%" },
-  { key: "email", label: "Email", _style: "min-width:20%;" },
-  { key: "alamat", label: "Alamat", _style: "min-width:10%;" },
-  { key: "fotoCV", label: "CV", _style: "min-width:10%;" },
-  { key: "fotoKTP", label: "KTP", _style: "min-width:10%;" },
-  { key: "status", label: "Status", _style: "min-width:10%;" }
+  { key: "tanggalJadwal", label: "Tanggal", _style: "min-width:40%" },
+  { key: "jamMulai", label: "Mulai", _style: "min-width:20%;" },
+  { key: "jamSelesai", label: "Selesai", _style: "min-width:10%;" },
+  { key: "statusJadwal", label: "Status", _style: "min-width:10%;" }
 ];
 export default {
-  name: "ModalDetailPasien",
+  name: "ModalDetailDokter",
   props: ["item"],
   data() {
     return {
@@ -80,9 +82,7 @@ export default {
       fields
     };
   },
-  mounted() {
-    this.getlistA()
-  },
+  mounted() {},
   methods: {
     tembak() {
       this.$emit("tembak");
@@ -92,10 +92,8 @@ export default {
       console.log(profil);
       this.profil = profil.data.data[0];
 
-      let scan = await axios.get(
-        ipBackend + "scanning/listScanningByUserId/" + x
-      );
-      console.log(scan,'<<');
+      let scan = await axios.get(ipBackend + "jadwal/listByDokterId/" + x);
+      console.log(scan);
       this.listA = scan.data.data;
     }
   },
