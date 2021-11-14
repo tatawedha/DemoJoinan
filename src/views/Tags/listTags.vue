@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">DAFTAR PASIEN</dt>
+              <dt class="col-sm-10">DAFTAR DOKTER</dt>
               <dd class="col-sm-2">
                 <ModalAdd @go="alert($event)" />
               </dd>
@@ -28,9 +28,6 @@
                 >
                   <template #No="{index}">
                     <td class="text-center">{{ index + 1 }}</td>
-                  </template>
-                  <template #golonganDarah="{item}">
-                    <td class="text-center">{{ item.golonganDarah }}</td>
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
@@ -65,25 +62,17 @@
 <script>
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
-import ModalAdd from "@/views/Pasien/ModalAdd";
-import ModalDelete from "@/views/Pasien/ModalDelete";
-import ModalEdit from "@/views/Pasien/ModalEdit";
-// import ModalDetail from "@/views/Pasien/ModalDetail";
-import ModalListA from "@/views/Pasien/ModalListA";
+import ModalAdd from "@/views/Tags/ModalAdd";
+import ModalDelete from "@/views/Tags/ModalDelete";
+import ModalEdit from "@/views/Tags/ModalEdit";
+// import ModalDetail from "@/views/Tags/ModalDetail";
+import ModalListA from "@/views/Tags/ModalListA";
 import moment from "moment";
 import "moment/locale/id";
 
 const fields = [
   { key: "No", label: "No", _style: "width:1%" },
-  { key: "nama", label: "Nama", _style: "min-width:20%;text-align:center" },
-  {
-    key: "jenisKelamin",
-    label: "Jenis Kelamin",
-    _style: "min-width:10%;text-align:center"
-  },
-  { key: "golonganDarah", label: "Gol. Darah", _style: "width:7%" },
-  { key: "beratBadan", label: "BB", _style: "width:5%" },
-  { key: "tinggiBadan", label: "TB", _style: "width:5%" },
+  { key: "namamasterTags", label: "Nama Tags", _style: "min-width:20%;text-align:center" },
   {
     key: "Actions",
     label: "",
@@ -127,23 +116,16 @@ export default {
     };
   },
   created() {
-    this.getPasien();
+    this.getTags();
   },
   methods: {
     show() {
       console.log(this.hapus);
     },
-    getStatus(val) {
-      if (val == 0) {
-        return "Tidak Dipublikasi";
-      } else if (val == 1) {
-        return "Sedang di Publikasi";
-      }
-    },
-    async getPasien() {
-      let pasien = await axios.get(ipBackend + "users/listByRole/Pasien");
-      console.log(pasien.data.data);
-      this.usersData = pasien.data.data.map(item => {
+    async getTags() {
+      let tags = await axios.get(ipBackend + "masterTags/list");
+      console.log(tags.data.data);
+      this.usersData = tags.data.data.map(item => {
         return { ...item };
       });
     },
@@ -156,7 +138,7 @@ export default {
     },
     alert(x) {
       let vm = this;
-      this.getPasien();
+      this.getTags();
       vm.notif = true;
       vm.msg = x.msg;
       vm.color = x.color;

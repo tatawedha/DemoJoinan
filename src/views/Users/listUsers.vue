@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">DAFTAR DOKTER</dt>
+              <dt class="col-sm-10">DAFTAR PASIEN</dt>
               <dd class="col-sm-2">
                 <ModalAdd @go="alert($event)" />
               </dd>
@@ -65,11 +65,11 @@
 <script>
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
-import ModalAdd from "@/views/Dokter/ModalAdd";
-import ModalDelete from "@/views/Dokter/ModalDelete";
-import ModalEdit from "@/views/Dokter/ModalEdit";
-// import ModalDetail from "@/views/Dokter/ModalDetail";
-import ModalListA from "@/views/Dokter/ModalListA";
+import ModalAdd from "@/views/Users/ModalAdd";
+import ModalDelete from "@/views/Users/ModalDelete";
+import ModalEdit from "@/views/Users/ModalEdit";
+// import ModalDetail from "@/views/Users/ModalDetail";
+import ModalListA from "@/views/Users/ModalListA";
 import moment from "moment";
 import "moment/locale/id";
 
@@ -141,7 +141,7 @@ export default {
       }
     },
     async getPasien() {
-      let pasien = await axios.get(ipBackend + "users/listByRole/Dokter");
+      let pasien = await axios.get(ipBackend + "users/list");
       console.log(pasien.data.data);
       this.usersData = pasien.data.data.map(item => {
         return { ...item };

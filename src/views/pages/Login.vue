@@ -10,7 +10,7 @@
             <CCard class="p-4">
               <CCardBody>
                 <CForm>
-                  <h1 class="text-center text-muted">Brainwave Login</h1>
+                  <h1 class="text-center text-muted">Mosoto Login</h1>
                   <!-- <p class="text-muted">Masuk</p> -->
                   <CInput
                     placeholder="Username"
@@ -128,7 +128,7 @@ export default {
     async login() {
       let vm = this;
       vm.busy = true;
-      let login = await axios.post(ipBackend + "users/login", {
+      let login = await axios.post(ipBackend + "user/login", {
         username: vm.username,
         password: vm.password
       });

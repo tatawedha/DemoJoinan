@@ -8,13 +8,13 @@ const TheContainer = () => import("@/containers/TheContainer");
 // Views
 const Dashboard = () => import("@/views/Dashboard");
 
-const Page404 = () => import("@/views/pages/Page404");
-const Page500 = () => import("@/views/pages/Page500");
+// const Page404 = () => import("@/views/pages/Page404");
+// const Page500 = () => import("@/views/pages/Page500");
 const Login = () => import("@/views/pages/Login");
 const Register = () => import("@/views/pages/Register");
-const Pasien = () => import("@/views/Pasien/listPasien");
-const Dokter = () => import("@/views/Dokter/listDokter");
-const Jadwal = () => import("@/views/Jadwal/listJadwal");
+const Users = () => import("@/views/Users/listUsers");
+const Tags = () => import("@/views/Tags/listTags");
+const Create = () => import("@/views/pages/Create");
 
 Vue.use(Router);
 
@@ -45,44 +45,44 @@ const router = new Router({
           component: Dashboard
         },
         {
-          path: "pasien",
-          name: "Pasien",
-          component: Pasien
+          path: "users",
+          name: "Users",
+          component: Users
         },
         {
-          path: "dokter",
-          name: "Dokter",
-          component: Dokter
+          path: "tags",
+          name: "Tags",
+          component: Tags
         },
         {
-          path: "jadwal",
-          name: "Jadwal",
-          component: Jadwal
+          path: "create",
+          name: "Create",
+          component: Create
         }
       ]
     },
-    {
-      path: "/pages",
-      redirect: "/pages/404",
-      name: "Pages",
-      component: {
-        render(c) {
-          return c("router-view");
-        }
-      },
-      children: [
-        {
-          path: "404",
-          name: "Page404",
-          component: Page404
-        },
-        {
-          path: "500",
-          name: "Page500",
-          component: Page500
-        }
-      ]
-    }
+    // {
+    //   path: "/pages",
+    //   redirect: "/pages/404",
+    //   name: "Pages",
+    //   component: {
+    //     render(c) {
+    //       return c("router-view");
+    //     }
+    //   },
+    //   children: [
+    //     {
+    //       path: "404",
+    //       name: "Page404",
+    //       component: Page404
+    //     },
+    //     {
+    //       path: "500",
+    //       name: "Page500",
+    //       component: Page500
+    //     }
+    //   ]
+    // }
   ]
 });
 

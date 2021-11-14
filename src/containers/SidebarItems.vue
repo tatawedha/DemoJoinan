@@ -23,24 +23,49 @@ export default {
               items: [
                 {
                   _name: "CSidebarNavItem",
-                  name: "Pasien",
-                  to: "/pasien",
+                  name: "USER",
+                  to: "/Users",
                   icon: "cil-layers"
                 },
                 {
                   _name: "CSidebarNavItem",
-                  name: "Dokter",
-                  to: "/dokter",
+                  name: "TAGS",
+                  to: "/tags",
                   icon: "cil-layers"
                 }
               ]
             },
             {
-              _name: "CSidebarNavItem",
-              name: "Jadwal",
-              to: "/jadwal",
-              icon: "cil-layers"
+              _name: "CSidebarNavDropdown",
+              name: "Kontens",
+              icon: "cil-layers",
+              items: [
+                {
+                  _name: "CSidebarNavItem",
+                  name: "Create",
+                  to: "/Create",
+                  icon: "cil-layers"
+                },
+                {
+                  _name: "CSidebarNavItem",
+                  name: "New",
+                  to: "/tags",
+                  icon: "cil-layers"
+                },
+                {
+                  _name: "CSidebarNavItem",
+                  name: "Popular",
+                  to: "/tags",
+                  icon: "cil-layers"
+                }
+              ]
             },
+            // {
+            //   _name: "CSidebarNavItem",
+            //   name: "Jadwal",
+            //   to: "/jadwal",
+            //   icon: "cil-layers"
+            // },
             {
               _name: "CSidebarNavDivider"
             },
