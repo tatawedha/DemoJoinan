@@ -18,18 +18,18 @@ export default {
             },
             {
               _name: "CSidebarNavDropdown",
-              name: "Data Master",
+              name: "DATA MASTER",
               icon: "cil-layers",
               items: [
                 {
                   _name: "CSidebarNavItem",
-                  name: "USER",
+                  name: "Users",
                   to: "/Users",
                   icon: "cil-layers"
                 },
                 {
                   _name: "CSidebarNavItem",
-                  name: "TAGS",
+                  name: "Tags",
                   to: "/tags",
                   icon: "cil-layers"
                 }
@@ -37,7 +37,7 @@ export default {
             },
             {
               _name: "CSidebarNavDropdown",
-              name: "Kontens",
+              name: "CONTENT",
               icon: "cil-layers",
               items: [
                 {

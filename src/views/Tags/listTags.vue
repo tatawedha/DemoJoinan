@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">DAFTAR DOKTER</dt>
+              <dt class="col-sm-10">List Tags</dt>
               <dd class="col-sm-2">
                 <ModalAdd @go="alert($event)" />
               </dd>
@@ -124,7 +124,7 @@ export default {
     },
     async getTags() {
       let tags = await axios.get(ipBackend + "masterTags/list");
-      console.log(tags.data.data);
+      console.log(tags);
       this.usersData = tags.data.data.map(item => {
         return { ...item };
       });

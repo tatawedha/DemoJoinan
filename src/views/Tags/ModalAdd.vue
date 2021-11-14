@@ -95,6 +95,7 @@ export default {
             color: "success"
           });
           vm.myModal = false;
+          vm.data.namamasterTags = ""
         } else {
           vm.busy = false;
           vm.$emit("go", {

@@ -16,4 +16,17 @@ export default {
 <style lang="scss">
 // Import Main styles for this application
 @import "assets/scss/style";
+
+.ql-container {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1rem !important;
+}
+.ql-editor {
+  padding: 100px !important;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 0 !important;
+}
 </style>
