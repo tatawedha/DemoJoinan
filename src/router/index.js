@@ -14,7 +14,8 @@ const Login = () => import("@/views/pages/Login");
 const Register = () => import("@/views/pages/Register");
 const Users = () => import("@/views/Users/listUsers");
 const Tags = () => import("@/views/Tags/listTags");
-const Create = () => import("@/views/pages/Create");
+const Create = () => import("@/views/Create/Create");
+const newKonten = () => import("@/views/Konten/listKonten");
 
 Vue.use(Router);
 
@@ -58,6 +59,11 @@ const router = new Router({
           path: "create",
           name: "Create",
           component: Create
+        },
+        {
+          path: "new",
+          name: "New",
+          component: newKonten
         }
       ]
     },

@@ -49,7 +49,7 @@ export default {
                 {
                   _name: "CSidebarNavItem",
                   name: "New",
-                  to: "/tags",
+                  to: "/new",
                   icon: "cil-layers"
                 },
                 {

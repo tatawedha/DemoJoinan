@@ -22,7 +22,7 @@ export default {
   font-size: 1rem !important;
 }
 .ql-editor {
-  padding: 100px !important;
+  height: 100px !important;
 }
 
 .ql-editor ol,

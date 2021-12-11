@@ -5,9 +5,9 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">DAFTAR DOKTER</dt>
+              <dt class="col-sm-10">NEW KONTEN</dt>
               <dd class="col-sm-2">
-                <ModalAdd @go="alert($event)" />
+                <!-- <ModalAdd @go="alert($event)" /> -->
               </dd>
             </dl>
           </CCardHeader>
@@ -15,7 +15,7 @@
             <CRow>
               <CCol>
                 <CDataTable
-                  :items="usersData"
+                  :items="newKonten"
                   :fields="fields"
                   column-filter
                   items-per-page-select
@@ -29,8 +29,8 @@
                   <template #No="{index}">
                     <td class="text-center">{{ index + 1 }}</td>
                   </template>
-                  <template #golonganDarah="{item}">
-                    <td class="text-center">{{ item.golonganDarah }}</td>
+                  <template #createdAt="{item}">
+                    <td class="text-center">{{ moment(item.createdAt).format('ll')}}</td>
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
@@ -75,19 +75,19 @@ import "moment/locale/id";
 
 const fields = [
   { key: "No", label: "No", _style: "width:1%" },
-  { key: "nama", label: "Nama", _style: "min-width:20%;text-align:center" },
+  { key: "judulKonten", label: "Judul", _style: "min-width:20%;text-align:center" },
   {
-    key: "jenisKelamin",
-    label: "Jenis Kelamin",
+    key: "modelKonten",
+    label: "Model",
     _style: "min-width:10%;text-align:center"
   },
-  { key: "golonganDarah", label: "Gol. Darah", _style: "width:7%" },
-  { key: "beratBadan", label: "BB", _style: "width:5%" },
-  { key: "tinggiBadan", label: "TB", _style: "width:5%" },
+  { key: "typeKonten", label: "Type", _style: "width:10%" },
+  { key: "createdAt", label: "created", _style: "width:20%" },
+  { key: "kreatorId", label: "Kreator", _style: "width:10%" },
   {
     key: "Actions",
-    label: "",
-    _style: "width:20%",
+    label: "Actions",
+    _style: "max-width:10%",
     sorter: false,
     filter: false
   }
@@ -117,7 +117,8 @@ export default {
   },
   data() {
     return {
-      usersData: [],
+      moment,
+      newKonten: [],
       fields,
       hapus: false,
       collapseDuration: 0,
@@ -127,7 +128,7 @@ export default {
     };
   },
   created() {
-    this.getPasien();
+    this.getKonten();
   },
   methods: {
     show() {
@@ -140,10 +141,10 @@ export default {
         return "Sedang di Publikasi";
       }
     },
-    async getPasien() {
-      let pasien = await axios.get(ipBackend + "users/listByRole/Dokter");
-      console.log(pasien.data.data);
-      this.usersData = pasien.data.data.map(item => {
+    async getKonten() {
+      let konten = await axios.get(ipBackend + "konten/list");
+      console.log(konten.data.data);
+      this.newKonten = konten.data.data.map(item => {
         return { ...item };
       });
     },
@@ -156,7 +157,7 @@ export default {
     },
     alert(x) {
       let vm = this;
-      this.getPasien();
+      this.getKonten();
       vm.notif = true;
       vm.msg = x.msg;
       vm.color = x.color;
