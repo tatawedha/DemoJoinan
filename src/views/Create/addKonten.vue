@@ -54,8 +54,11 @@
     <CRow class="mb-3 mt-4">
       <CCol></CCol>
       <CCol class="col-md-4">
-        <CButton block @click="regis()" color="success" :disabled="busy">
+        <CButton v-if="data.id ==null" block @click="regis()" color="success" :disabled="busy">
           <CSpinner v-if="busy" size="sm" /> DAFTAR</CButton
+        >
+        <CButton  v-if="data.id != null" block @click="regis()" color="success" :disabled="busy">
+          <CSpinner v-if="busy" size="sm" /> UPDATE</CButton
         >
       </CCol>
       <CCol></CCol>

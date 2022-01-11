@@ -4,19 +4,42 @@
       <CCol>
         <CCard>
           <CCardBody>
+            <CCardBody>
+              <!-- <b-form-group label-cols-md="3"> -->
+              <template v-slot:label>
+                Kelurahan <span class="text-danger">*</span>
+              </template>
+              <multiselect
+                v-model="search"
+                :options="konten"
+                :multiple="false"
+                :searchable="true"
+                :close-on-select="true"
+                :show-labels="false"
+                label="judulKonten"
+                track-By="kontenId"
+                placeholder="-- Cari Judul --"
+                @input="setKonten(search)"
+              ></multiselect>
+              <!-- </b-form-group> -->
+            </CCardBody>
+          </CCardBody>
+        </CCard>
+        <CCard>
+          <CCardBody>
             <CTabs fluid>
               <CTab title="Data Konten" active>
                 <Add :data="data" @alert="setSub($event)"></Add>
               </CTab>
-              <CTab title="Isi Konten">
+              <CTab title="Isi Konten" :disabled="kontenId == ''">
                 <AddSub
-                  :dataSub="dataSub"
                   :subs="subs"
                   :kontenId="kontenId"
+                  @alert="change = !change"
                 ></AddSub>
               </CTab>
-              <CTab title="Preview">
-                <Preview :data="data" :subs="subs"></Preview>
+              <CTab title="Preview" :disabled="kontenId == ''">
+                <Preview :kontenId="kontenId" :data="data" :change="change"></Preview>
               </CTab>
             </CTabs>
           </CCardBody>
@@ -31,9 +54,7 @@
       centered
     >
       <CCol col="12" class="text-center">
-        <CButton @click="(myModal = false), lanjut()" :color="color" block
-          >Masuk</CButton
-        >
+        <CButton :variant="variant">{{ msg }}</CButton>
       </CCol>
       <template #footer-wrapper> <span></span> </template>
     </CModal>
@@ -66,16 +87,9 @@ export default {
         file: "",
         bulkTag: ""
       },
-      dataSub: {
-        file1: "",
-        modelSub: "",
-        judulSubKonten: "",
-        nomorSub: "",
-        textKonten: "",
-        linkSub: "",
-        namaGambar: ""
-      },
+      search: "",
       kontenId: "",
+      change: false,
       subs: [],
       kate: [
         { value: "", label: "" },
@@ -119,10 +133,12 @@ export default {
           filter: false
         }
       ],
-      tags: "",
+      tags: [],
+      konten: [],
+      msg: "",
       busy: false,
       variant: "",
-      color:"",
+      color: "",
       src: "",
       src1: "",
       myModal1: false
@@ -140,11 +156,22 @@ export default {
     this.getData();
   },
   methods: {
+    setKonten(x) {
+      console.log(x);
+      let vm = this;
+      vm.kontenId = x.id;
+      vm.kontenId = x.kontenId;
+      vm.data = x
+      vm.setSub(x);
+      vm.change = !vm.change
+    },
     setSub(x) {
       console.log(x);
       let vm = this;
       vm.kontenId = x.kontenId;
       vm.myModal1 = x.showing;
+      vm.msg = x.msg;
+      vm.variant = x.variant;
     },
     place() {},
     // async regis() {
@@ -155,14 +182,25 @@ export default {
 
       console.log(tags);
       this.tags = tags.data.data;
+
+      let konten = await axios.get(ipBackend + "konten/list");
+
+      this.konten = konten.data.data.map(item => {
+        item.kontenId = item.id;
+        return item;
+      });
     },
     async getSub() {
+      let vm = this;
+      vm.subs = [];
       let sub = await axios.get(
         ipBackend + "subKonten/listByKontenId/" + vm.kontenId
       );
 
-      console.log(sub);
-      vm.subs = sub.data.data;
+      console.log(sub.data.data, "<<");
+      sub.data.data.forEach(ele => {
+        vm.subs.push(ele);
+      });
     }
   },
   watch: {
