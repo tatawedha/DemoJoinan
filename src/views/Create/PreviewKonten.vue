@@ -8,10 +8,15 @@
             <div></div>
             <div v-for="item in subs" :key="item.id">
               <div v-if="item.tipeSub == 'Artikel'">
-                <div class="ql-editor" v-html="item.textKonten"></div>
+                <div v-html="item.textKonten"></div>
               </div>
-              <div v-if="(item.tipeSub == 'Gambar') && item.gambarSubKonten != null">
-                <img :src="ipBackend + item.gambarSubKonten" />
+              <div
+                v-if="item.tipeSub == 'Gambar' && item.gambarSubKonten != null"
+                class="mt-4"
+              >
+                <center>
+                  <img :src="item.src" style="width:600px;height:400px" />
+                </center>
               </div>
             </div>
           </CCardBody>
@@ -27,12 +32,12 @@ import axios from "axios";
 import moment from "moment";
 import "moment/locale/id";
 export default {
-  props: ["kontenId", "change", "data" ],
+  props: ["kontenId", "change", "data"],
   data() {
     return {
       ipBackend,
       moment,
-      subs:[]
+      subs: []
     };
   },
   methods: {
@@ -43,16 +48,29 @@ export default {
       );
 
       console.log(sub, "<< subpreview");
-      vm.subs = sub.data.data;
+      vm.subs = sub.data.data.map(item => {
+        item.src = ipBackend + item.gambarSubKonten;
+        return item;
+      });
+
+      vm.subs.sort(function(a,b){return a.nomorSub - b.nomorSub})
     }
   },
   watch: {
     change: function(newVal, oldVal) {
-      console.log(newVal)
+      console.log(newVal);
       if (newVal != oldVal) {
-        this.getSub()
+        this.getSub();
       }
     }
   }
 };
 </script>
+
+<style  scoped>
+#editor-container {
+    height: 500px;
+    overflow-y: auto;
+    font-size: 1rem;
+}
+</style>

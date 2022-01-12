@@ -187,6 +187,7 @@ export default {
 
       this.konten = konten.data.data.map(item => {
         item.kontenId = item.id;
+        item.src = ipBackend + item.gambarKonten
         return item;
       });
     },

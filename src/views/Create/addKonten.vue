@@ -45,8 +45,8 @@
     />
     <center>
       <CImg
-        v-if="src != ''"
-        :src="src"
+        v-if="data.src != ''"
+        :src="data.src"
         style="max-height: 400px; max-width:700px;"
       />
     </center>
@@ -57,7 +57,7 @@
         <CButton v-if="data.id ==null" block @click="regis()" color="success" :disabled="busy">
           <CSpinner v-if="busy" size="sm" /> DAFTAR</CButton
         >
-        <CButton  v-if="data.id != null" block @click="regis()" color="success" :disabled="busy">
+        <CButton  v-if="data.id != null" block @click="update()" color="success" :disabled="busy">
           <CSpinner v-if="busy" size="sm" /> UPDATE</CButton
         >
       </CCol>
@@ -113,7 +113,7 @@ export default {
   methods: {
     handleFile() {
       this.data.file = this.$refs.file.$data.state[0];
-      this.src = URL.createObjectURL(this.data.file);
+      this.data.src = URL.createObjectURL(this.data.file);
     },
     place() {},
     // async regis() {
@@ -123,6 +123,45 @@ export default {
       let vm = this;
       let formData = new FormData();
       //   console.log(vm.bulkT);
+      formData.append("file1", vm.data.file);
+      formData.append("judulKonten", vm.data.judulKonten);
+      formData.append("typeKonten", vm.data.typeKonten);
+      formData.append("modelKonten", vm.data.modelKonten);
+      formData.append("bulkTagString", JSON.stringify(vm.bulkT));
+      let regis = await axios.post(ipBackend + "konten/register", formData);
+      console.log(regis, "ini");
+
+      if (regis.data.status == 200) {
+        if (regis.data.message == "sukses") {
+          vm.busy = false;
+          vm.$emit("alert", {
+            variant: "success",
+            msg: "BERHASIL MENAMBAH KONTEN BARU",
+            kontenId: regis.data.data.id,
+            showing: true
+          });
+        } else {
+          vm.busy = false;
+          vm.$emit("alert", {
+            variant: "danger",
+            msg: _.toUpper(res.data.message),
+            showing: true
+          });
+        }
+      } else {
+          vm.busy= false
+        vm.$emit("alert", {
+          variant: "danger",
+          msg: "TERJADI KESALAHAN PADA SERVER",
+          showing: true
+        });
+      }
+    },
+    async update() {
+      let vm = this;
+      let formData = new FormData();
+      //   console.log(vm.bulkT);
+      formData.append("id", vm.data.id)
       formData.append("file1", vm.data.file);
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);

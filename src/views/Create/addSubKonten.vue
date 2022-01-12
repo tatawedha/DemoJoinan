@@ -61,8 +61,11 @@
         <CRow class="mb-3 mt-4">
           <CCol></CCol>
           <CCol class="col-md-4">
-            <CButton block @click="regisSub()" color="success" :disabled="busy">
+            <CButton v-if="dataSub.id == null" block @click="regisSub()" color="success" :disabled="busy">
               <CSpinner v-if="busy" size="sm" /> TAMBAHKAN</CButton
+            >
+            <CButton v-else block @click="updateSub()" color="success" :disabled="busy">
+              <CSpinner v-if="busy" size="sm" /> Update</CButton
             >
           </CCol>
           <CCol></CCol>
@@ -157,7 +160,7 @@ export default {
           label: "Model",
           _style: "min-width:10%"
         },
-        // { key: "typeKonten", label: "Type", _style: "width:10%" },
+        { key: "namaGambar", label: "Nama Gambar", _style: "width:10%" },
         { key: "linkSub", label: "Link", _style: "width:20%" },
         { key: "kreatorId", label: "Kreator", _style: "width:10%" },
         {
@@ -191,7 +194,9 @@ export default {
     async regisSub() {
       let vm = this;
       let formData = new FormData();
-      formData.append("file1", vm.dataSub.file);
+      if(vm.dataSub.file1){
+        formData.append("file1", vm.dataSub.file1);
+      }
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
       formData.append("textKonten", vm.dataSub.textKonten);
       formData.append("tipeSub", vm.dataSub.tipeSub);
@@ -213,7 +218,51 @@ export default {
             msg: "BERHASIL MENAMBAH/MENGUBAH SUB KONTEN",
             showing: true
           });
-          // vm.getSub();
+          vm.getSub();
+        } else {
+          vm.busy = false;
+          vm.$emit("alert", {
+            variant: "danger",
+            msg: _.toUpper(res.data.message),
+            showing: true
+          });
+        }
+      } else {
+        vm.$emit("alert", {
+          variant: "danger",
+          msg: "TERJADI KESALAHAN PADA SERVER",
+          showing: true
+        });
+      }
+    },
+    async updateSub() {
+      let vm = this;
+      let formData = new FormData();
+      if(vm.dataSub.file1 != ""){
+        formData.append("file1", vm.dataSub.file1);
+      }
+      formData.append('id', vm.dataSub.id)
+      formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
+      formData.append("textKonten", vm.dataSub.textKonten);
+      formData.append("tipeSub", vm.dataSub.tipeSub);
+      formData.append("linkSub", vm.dataSub.linkSub);
+      formData.append("nomorSub", vm.dataSub.nomorSub);
+      formData.append("namaGambar", vm.dataSub.namaGambar);
+      let regisSub = await axios.post(
+        ipBackend + "subKonten/update",
+        formData
+      );
+      console.log(regisSub);
+      if (regisSub.data.status == 200) {
+        if (regisSub.data.message == "sukses") {
+          vm.busy = false;
+          vm.resetSub();
+          vm.$emit("alert", {
+            variant: "success",
+            msg: "BERHASIL MENAMBAH/MENGUBAH SUB KONTEN",
+            showing: true
+          });
+          vm.getSub();
         } else {
           vm.busy = false;
           vm.$emit("alert", {
@@ -244,6 +293,7 @@ export default {
 
       console.log(sub, "<< sub");
       vm.subs = sub.data.data;
+      vm.subs.sort(function(a,b){return a.nomorSub - b.nomorSub})
     },
     resetSub() {
       let vm = this;
@@ -268,3 +318,13 @@ export default {
   }
 };
 </script>
+
+<style  scoped>
+#editor-container {
+    max-height: 500px;
+    overflow-y: auto;
+    font-size: 1rem;
+}
+</style>
+
+
