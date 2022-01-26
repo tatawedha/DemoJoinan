@@ -92,7 +92,7 @@ const router = new Router({
   ]
 });
 
-let token = localStorage.getItem("token");
+var token = localStorage.getItem("token");
 router.beforeEach((to, from, next) => {
   // console.log(token, "<<");
   if (!token) {
@@ -100,7 +100,7 @@ router.beforeEach((to, from, next) => {
       next({
         path: "/login"
       });
-    } else {
+    } else{
       next();
     }
   } else if (token) {

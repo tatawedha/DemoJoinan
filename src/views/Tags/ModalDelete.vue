@@ -1,15 +1,15 @@
 <template>
   <CContainer>
     <CButton
-      v-c-tooltip="'Hapus Pasien'"
+      v-c-tooltip="'Hapus Tags'"
       color="danger"
       @click="myModal = true"
       class="mr-1"
     >
       <CIcon name="cil-trash" />
     </CButton>
-    <CModal title="Hapus Pasien" size="sm" :show.sync="myModal">
-      <H4>Apakah Anda Yakin Menghapus Data Pasien?</H4>
+    <CModal title="Hapus Tags" size="none" :show.sync="myModal">
+      <H4>Apakah Anda Yakin Menghapus Data Tags?</H4>
       <template #footer>
         <CCol col="6" class="text-center">
           <CButton @click="(myModal = false), hapus(item.id)" color="success"
@@ -27,7 +27,7 @@
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
 export default {
-  name: "ModalCloseMagang",
+  name: "ModalDeleteTags",
   props: ["item"],
   data() {
     return {
@@ -38,15 +38,17 @@ export default {
   },
   mounted() {},
   methods: {
+    
     async hapus(x) {
-      let hapus = await axios.post(ipBackend + "users/delete", {
+      let vm = this
+      let hapus = await axios.post(ipBackend + "masterTags/delete", {
         id: x
       });
       console.log(hapus);
       if (hapus.data.status == 200) {
         if (hapus.data.message == "sukses") {
           vm.$emit("go", {
-            msg: "HAPUS PASIEN BERHASIL",
+            msg: "HAPUS TAG BERHASIL",
             color: "success"
           });
         } else {

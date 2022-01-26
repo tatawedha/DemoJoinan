@@ -6,9 +6,9 @@
           <CCardBody>
             <CCardBody>
               <!-- <b-form-group label-cols-md="3"> -->
-              <template v-slot:label>
+              <!-- <template v-slot:label>
                 Kelurahan <span class="text-danger">*</span>
-              </template>
+              </template> -->
               <multiselect
                 v-model="search"
                 :options="konten"
@@ -19,7 +19,6 @@
                 label="judulKonten"
                 track-By="kontenId"
                 placeholder="-- Cari Judul --"
-                @input="setKonten(search)"
               ></multiselect>
               <!-- </b-form-group> -->
             </CCardBody>
@@ -39,7 +38,11 @@
                 ></AddSub>
               </CTab>
               <CTab title="Preview" :disabled="kontenId == ''">
-                <Preview :kontenId="kontenId" :data="data" :change="change"></Preview>
+                <Preview
+                  :kontenId="kontenId"
+                  :data="data"
+                  :change="change"
+                ></Preview>
               </CTab>
             </CTabs>
           </CCardBody>
@@ -54,7 +57,7 @@
       centered
     >
       <CCol col="12" class="text-center">
-        <CButton :variant="variant">{{ msg }}</CButton>
+        <CButton :color="variant" @click="myModal1 = false">{{ msg }}</CButton>
       </CCol>
       <template #footer-wrapper> <span></span> </template>
     </CModal>
@@ -85,7 +88,8 @@ export default {
         typeKonten: "",
         modelKonten: "",
         file: "",
-        bulkTag: ""
+        bulkTag: [],
+        src:""
       },
       search: "",
       kontenId: "",
@@ -157,16 +161,16 @@ export default {
   },
   methods: {
     setKonten(x) {
-      console.log(x);
+      // console.log(x);
       let vm = this;
       vm.kontenId = x.id;
       vm.kontenId = x.kontenId;
-      vm.data = x
+      vm.data = x;
       vm.setSub(x);
-      vm.change = !vm.change
+      vm.change = !vm.change;
     },
     setSub(x) {
-      console.log(x);
+      // console.log(x);
       let vm = this;
       vm.kontenId = x.kontenId;
       vm.myModal1 = x.showing;
@@ -187,7 +191,7 @@ export default {
 
       this.konten = konten.data.data.map(item => {
         item.kontenId = item.id;
-        item.src = ipBackend + item.gambarKonten
+        item.src = ipBackend + item.gambarKonten;
         return item;
       });
     },
@@ -197,8 +201,7 @@ export default {
       let sub = await axios.get(
         ipBackend + "subKonten/listByKontenId/" + vm.kontenId
       );
-
-      console.log(sub.data.data, "<<");
+      // console.log(sub.data.data, "<<");
       sub.data.data.forEach(ele => {
         vm.subs.push(ele);
       });
@@ -208,6 +211,20 @@ export default {
     kontenId: function(newVal, oldVal) {
       if (newVal != oldVal) {
         this.getSub();
+      }
+    },
+    search: function(val) {
+      let vm = this
+      if (val == null) {
+        vm.data = {
+          judulKonten: "",
+          typeKonten: "",
+          modelKonten: "",
+          file: "",
+          bulkTag: ""
+        };
+      } else {
+        vm.setKonten(vm.search);
       }
     }
   }

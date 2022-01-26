@@ -34,9 +34,10 @@
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
-                      <ModalListA :item="item" @go="alert($event)" />
-                      <ModalEdit :item="item" @go="alert($event)" />
+                      <!-- <ModalListA :item="item" @go="alert($event)" />
+                      <ModalEdit :item="item" @go="alert($event)" /> -->
                       <ModalDelete :item="item" @go="alert($event)" />
+                      {{item.actions}}
                     </td>
                   </template>
                 </CDataTable>
@@ -65,11 +66,11 @@
 <script>
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
-import ModalAdd from "@/views/Tags/ModalAdd";
-import ModalDelete from "@/views/Tags/ModalDelete";
-import ModalEdit from "@/views/Tags/ModalEdit";
-// import ModalDetail from "@/views/Tags/ModalDetail";
-import ModalListA from "@/views/Tags/ModalListA";
+import ModalAdd from "./ModalAdd";
+import ModalDelete from "./ModalDelete";
+import ModalEdit from "./ModalEdit";
+// import ModalDetail from "./ModalDetail";
+import ModalListA from "./ModalListA";
 import moment from "moment";
 import "moment/locale/id";
 

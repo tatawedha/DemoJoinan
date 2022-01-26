@@ -47,17 +47,28 @@
       <CImg
         v-if="data.src != ''"
         :src="data.src"
-        style="max-height: 400px; max-width:700px;"
       />
     </center>
 
     <CRow class="mb-3 mt-4">
       <CCol></CCol>
       <CCol class="col-md-4">
-        <CButton v-if="data.id ==null" block @click="regis()" color="success" :disabled="busy">
+        <CButton
+          v-if="data.id == null"
+          block
+          @click="regis()"
+          color="success"
+          :disabled="busy"
+        >
           <CSpinner v-if="busy" size="sm" /> DAFTAR</CButton
         >
-        <CButton  v-if="data.id != null" block @click="update()" color="success" :disabled="busy">
+        <CButton
+          v-if="data.id != null"
+          block
+          @click="update()"
+          color="success"
+          :disabled="busy"
+        >
           <CSpinner v-if="busy" size="sm" /> UPDATE</CButton
         >
       </CCol>
@@ -75,14 +86,15 @@ import VueQuillEditor from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import {resizeImage} from "@/resize.js"
 export default {
-  components: {Multiselect},
-  props:["data"],
+  components: { Multiselect },
+  props: ["data"],
   data() {
     return {
       tags: [],
       busy: false,
-      src:"",
+      variant:"",
       kate: [
         { value: "", label: "" },
         { value: "Absurb", label: "Absurb" },
@@ -101,10 +113,12 @@ export default {
   },
   computed: {
     bulkT() {
-      return this.data.bulkTag.map(item => {
-        console.log(item);
-        return { masterTagId: item.id };
-      });
+      let vm = this;
+      if (vm.data.bulkTag != []) {
+        return vm.data.bulkTag.map(item => {
+          return { masterTagId: item.id };
+        });
+      }
     }
   },
   created() {
@@ -113,7 +127,16 @@ export default {
   methods: {
     handleFile() {
       this.data.file = this.$refs.file.$data.state[0];
-      this.data.src = URL.createObjectURL(this.data.file);
+      resizeImage({
+        file: this.data.file,
+        maxSize:700,
+      }).then(res=>{
+        console.log(res)
+        this.data.file = res
+        this.data.src = URL.createObjectURL(res);
+      }).catch(err=>{
+        console.log(err)
+      })
     },
     place() {},
     // async regis() {
@@ -129,7 +152,7 @@ export default {
       formData.append("modelKonten", vm.data.modelKonten);
       formData.append("bulkTagString", JSON.stringify(vm.bulkT));
       let regis = await axios.post(ipBackend + "konten/register", formData);
-      console.log(regis, "ini");
+      console.log(regis.data.data.id, "ini");
 
       if (regis.data.status == 200) {
         if (regis.data.message == "sukses") {
@@ -144,12 +167,12 @@ export default {
           vm.busy = false;
           vm.$emit("alert", {
             variant: "danger",
-            msg: _.toUpper(res.data.message),
+            msg: res.data.message.toUpper(),
             showing: true
           });
         }
       } else {
-          vm.busy= false
+        vm.busy = false;
         vm.$emit("alert", {
           variant: "danger",
           msg: "TERJADI KESALAHAN PADA SERVER",
@@ -160,22 +183,23 @@ export default {
     async update() {
       let vm = this;
       let formData = new FormData();
-      //   console.log(vm.bulkT);
-      formData.append("id", vm.data.id)
+      // console.log(vm.bulkT);
+      formData.append("kontenId", vm.data.id);
       formData.append("file1", vm.data.file);
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);
       formData.append("modelKonten", vm.data.modelKonten);
-      formData.append("bulkTagString", JSON.stringify(vm.bulkT));
-      let regis = await axios.post(ipBackend + "konten/register", formData);
-      console.log(regis, "ini");
-
+      // if (vm.bulkT.length) {
+      //   formData.append("bulkTagString", JSON.stringify(vm.bulkT));
+      // }
+      let regis = await axios.post(ipBackend + "konten/update", formData);
+      console.log(regis.data.data, "ini update");
       if (regis.data.status == 200) {
         if (regis.data.message == "sukses") {
           vm.busy = false;
           vm.$emit("alert", {
             variant: "success",
-            msg: "BERHASIL MENAMBAH KONTEN BARU",
+            msg: "BERHASIL MENGUPDATE KONTEN ",
             kontenId: regis.data.data.id,
             showing: true
           });
@@ -183,12 +207,12 @@ export default {
           vm.busy = false;
           vm.$emit("alert", {
             variant: "danger",
-            msg: _.toUpper(res.data.message),
+            msg: res.data.message.toUpper(),
             showing: true
           });
         }
       } else {
-          vm.busy= false
+        vm.busy = false;
         vm.$emit("alert", {
           variant: "danger",
           msg: "TERJADI KESALAHAN PADA SERVER",

@@ -7,15 +7,15 @@
             <h3>{{ data.judulKonten }}</h3>
             <div></div>
             <div v-for="item in subs" :key="item.id">
-              <div v-if="item.tipeSub == 'Artikel'">
+              <div v-if="item.tipeSub == 'Artikel'" class="mt-2 mb-2">
                 <div v-html="item.textKonten"></div>
               </div>
               <div
                 v-if="item.tipeSub == 'Gambar' && item.gambarSubKonten != null"
-                class="mt-4"
+                class="mt-2 mb-2"
               >
                 <center>
-                  <img :src="item.src" style="width:600px;height:400px" />
+                  <img :src="item.src" style="max-width:600px;max-height:400px" />
                 </center>
               </div>
             </div>

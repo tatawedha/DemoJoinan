@@ -1,6 +1,7 @@
 import 'core-js/stable'
 import Vue from 'vue'
 import "regenerator-runtime/runtime";
+import vueRichTextEditor from 'vue-rich-text-editor';
 //import CoreuiVuePro from '@coreui/vue-pro'
 import CoreuiVuePro from '../node_modules/@coreui/vue-pro/src/index.js'
 import App from './App'
@@ -11,6 +12,7 @@ import { iconsSet as icons } from './assets/icons/icons.js'
 import i18n from './i18n.js'
 
 Vue.use(CoreuiVuePro)
+Vue.use(vueRichTextEditor)
 Vue.prototype.$log = console.log.bind(console)
 
 new Vue({

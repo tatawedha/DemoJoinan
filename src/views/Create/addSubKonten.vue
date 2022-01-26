@@ -52,19 +52,38 @@
             </center>
           </CCol>
         </CRow>
-        <CRow>
+        <!-- <CRow>
           <CCol class="col-md-3 pt-4 mt-4">Konten</CCol>
           <CCol class="col-md-9 pl-2"
             ><quill-editor v-model="dataSub.textKonten"
           /></CCol>
+        </CRow> -->
+        <CRow>
+          <CCol class="col-md-3 pt-4 mt-4">Konten</CCol>
+          <CCol class="col-md-9 pl-2"
+            ><VueEditor
+              v-model="dataSub.textKonten"
+          ></VueEditor></CCol>
         </CRow>
         <CRow class="mb-3 mt-4">
           <CCol></CCol>
           <CCol class="col-md-4">
-            <CButton v-if="dataSub.id == null" block @click="regisSub()" color="success" :disabled="busy">
+            <CButton
+              v-if="dataSub.id == null"
+              block
+              @click="regisSub()"
+              color="success"
+              :disabled="busy"
+            >
               <CSpinner v-if="busy" size="sm" /> TAMBAHKAN</CButton
             >
-            <CButton v-else block @click="updateSub()" color="success" :disabled="busy">
+            <CButton
+              v-else
+              block
+              @click="updateSub()"
+              color="success"
+              :disabled="busy"
+            >
               <CSpinner v-if="busy" size="sm" /> Update</CButton
             >
           </CCol>
@@ -90,7 +109,7 @@
                   color="danger"
                   v-c-tooltip="'Hapus Konten'"
                   class="mr-1"
-                  @click="myModal = true"
+                  @click="myModal = true, dataSub = item"
                 >
                   <CIcon name="cil-trash" />
                 </CButton>
@@ -99,11 +118,11 @@
           </CCardBody> </CCard></CCol
     ></CRow>
 
-    <CModal title="Hapus Sub Konten"  :show.sync="myModal">
+    <CModal title="Hapus Sub Konten" :show.sync="myModal">
       <H5>Apakah Anda Yakin Menghapus Data Sub Konten?</H5>
       <template #footer>
         <CCol col="6" class="text-center">
-          <CButton @click="(myModal = false), hapus(data.id)" color="success"
+          <CButton @click="(myModal = false), hapus()" color="success"
             >Yakin</CButton
           >
         </CCol>
@@ -120,19 +139,55 @@ import Vue from "vue";
 import { ipBackend } from "@/ipBackend";
 import axios from "axios";
 import Multiselect from "vue-multiselect";
-import "vue-multiselect/dist/vue-multiselect.min.css";
+// import richtexteditor from "vue-rich-text-editor"
+// import "vue-multiselect/dist/vue-multiselect.min.css";
 import VueQuillEditor from "vue-quill-editor";
+import { VueEditor, Quill } from "vue2-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import {resizeImage} from "@/resize.js"
 
 Vue.use(VueQuillEditor);
 export default {
-  components: { Multiselect },
+  components: { Multiselect, VueEditor},
   props: ["kontenId"],
   data() {
     return {
-      subs:[],
+      toolbarSettings: {
+        type: "MultiRow",
+        items: [
+          "Bold",
+          "Italic",
+          "Underline",
+          "StrikeThrough",
+          "FontName",
+          "FontSize",
+          "FontColor",
+          "BackgroundColor",
+          "LowerCase",
+          "UpperCase",
+          "|",
+          "Formats",
+          "Alignments",
+          "OrderedList",
+          "UnorderedList",
+          "Outdent",
+          "Indent",
+          "|",
+          "CreateLink",
+          "Image",
+          "|",
+          "ClearFormat",
+          "Print",
+          "SourceCode",
+          "FullScreen",
+          "|",
+          "Undo",
+          "Redo"
+        ]
+      },
+      subs: [],
       dataSub: {
         file1: "",
         tipeSub: "",
@@ -173,7 +228,7 @@ export default {
       ],
       busy: false,
       src1: "",
-      myModal:false
+      myModal: false
     };
   },
   computed: {},
@@ -185,7 +240,16 @@ export default {
     },
     handleFile1() {
       this.dataSub.file1 = this.$refs.file1.$data.state[0];
-      this.src1 = URL.createObjectURL(this.dataSub.file1);
+      resizeImage({
+        file: this.dataSub.file1,
+        maxSize:700,
+      }).then(res=>{
+        console.log(res)
+        this.dataSub.file1 = res
+        this.dataSub.src = URL.createObjectURL(res);
+      }).catch(err=>{
+        console.log(err)
+      })
     },
     place() {},
     // async regis() {
@@ -194,7 +258,7 @@ export default {
     async regisSub() {
       let vm = this;
       let formData = new FormData();
-      if(vm.dataSub.file1){
+      if (vm.dataSub.file1) {
         formData.append("file1", vm.dataSub.file1);
       }
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
@@ -223,7 +287,7 @@ export default {
           vm.busy = false;
           vm.$emit("alert", {
             variant: "danger",
-            msg: _.toUpper(res.data.message),
+            msg: regisSub.data.message.toUpper(),
             showing: true
           });
         }
@@ -238,20 +302,17 @@ export default {
     async updateSub() {
       let vm = this;
       let formData = new FormData();
-      if(vm.dataSub.file1 != ""){
+      if (vm.dataSub.file1 != "") {
         formData.append("file1", vm.dataSub.file1);
       }
-      formData.append('id', vm.dataSub.id)
+      formData.append("id", vm.dataSub.id);
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
       formData.append("textKonten", vm.dataSub.textKonten);
       formData.append("tipeSub", vm.dataSub.tipeSub);
       formData.append("linkSub", vm.dataSub.linkSub);
       formData.append("nomorSub", vm.dataSub.nomorSub);
       formData.append("namaGambar", vm.dataSub.namaGambar);
-      let regisSub = await axios.post(
-        ipBackend + "subKonten/update",
-        formData
-      );
+      let regisSub = await axios.post(ipBackend + "subKonten/update", formData);
       console.log(regisSub);
       if (regisSub.data.status == 200) {
         if (regisSub.data.message == "sukses") {
@@ -267,7 +328,38 @@ export default {
           vm.busy = false;
           vm.$emit("alert", {
             variant: "danger",
-            msg: _.toUpper(res.data.message),
+            msg: _.toUpper(regisSub.data.message),
+            showing: true
+          });
+        }
+      } else {
+        vm.$emit("alert", {
+          variant: "danger",
+          msg: "TERJADI KESALAHAN PADA SERVER",
+          showing: true
+        });
+      }
+    },
+    async hapus() {
+      let vm = this;
+      vm.busy = true
+      let hapus = await axios.post(ipBackend + "subKonten/delete", vm.dataSub);
+      console.log(hapus);
+      if (hapus.data.status == 200) {
+        if (hapus.data.message == "sukses") {
+          vm.busy = false;
+          vm.resetSub();
+          vm.$emit("alert", {
+            variant: "success",
+            msg: "BERHASIL MENAMBAH/MENGUBAH SUB KONTEN",
+            showing: true
+          });
+          vm.getSub();
+        } else {
+          vm.busy = false;
+          vm.$emit("alert", {
+            variant: "danger",
+            msg: _.toUpper(hapus.data.message),
             showing: true
           });
         }
@@ -293,7 +385,9 @@ export default {
 
       console.log(sub, "<< sub");
       vm.subs = sub.data.data;
-      vm.subs.sort(function(a,b){return a.nomorSub - b.nomorSub})
+      vm.subs.sort(function(a, b) {
+        return a.nomorSub - b.nomorSub;
+      });
     },
     resetSub() {
       let vm = this;
@@ -319,12 +413,18 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped>
+/* @import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-vue-richtexteditor/styles/material.css"; */
 #editor-container {
-    max-height: 500px;
-    overflow-y: auto;
-    font-size: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+  font-size: 1rem;
 }
 </style>
-
-
