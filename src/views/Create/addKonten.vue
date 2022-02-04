@@ -44,10 +44,7 @@
       :placeholder="place()"
     />
     <center>
-      <CImg
-        v-if="data.src != ''"
-        :src="data.src"
-      />
+      <CImg v-if="data.src != ''" :src="data.src" />
     </center>
 
     <CRow class="mb-3 mt-4">
@@ -86,15 +83,15 @@ import VueQuillEditor from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import {resizeImage} from "@/resize.js"
+import { resizeImage } from "@/resize.js";
 export default {
   components: { Multiselect },
-  props: ["data"],
+  props: ["data", "tags"],
   data() {
     return {
-      tags: [],
       busy: false,
-      variant:"",
+      variant: "",
+      namaGambar:"",
       kate: [
         { value: "", label: "" },
         { value: "Absurb", label: "Absurb" },
@@ -122,21 +119,24 @@ export default {
     }
   },
   created() {
-    this.getData();
+    // this.getData();
   },
   methods: {
     handleFile() {
       this.data.file = this.$refs.file.$data.state[0];
+      this.namaGambar = this.$refs.file.$data.state[0].name
       resizeImage({
         file: this.data.file,
-        maxSize:700,
-      }).then(res=>{
-        console.log(res)
-        this.data.file = res
-        this.data.src = URL.createObjectURL(res);
-      }).catch(err=>{
-        console.log(err)
+        maxSize: 700
       })
+        .then(res => {
+          console.log(res, this.namaGambar);
+          this.data.file = res;
+          this.data.src = URL.createObjectURL(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     place() {},
     // async regis() {
@@ -185,13 +185,13 @@ export default {
       let formData = new FormData();
       // console.log(vm.bulkT);
       formData.append("kontenId", vm.data.id);
-      formData.append("file1", vm.data.file);
+      formData.append("file1", vm.data.file, vm.namaGambar );
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);
       formData.append("modelKonten", vm.data.modelKonten);
-      // if (vm.bulkT.length) {
-      //   formData.append("bulkTagString", JSON.stringify(vm.bulkT));
-      // }
+      if (vm.bulkT.length) {
+        formData.append("bulkTagString", JSON.stringify(vm.bulkT));
+      }
       let regis = await axios.post(ipBackend + "konten/update", formData);
       console.log(regis.data.data, "ini update");
       if (regis.data.status == 200) {
@@ -219,32 +219,19 @@ export default {
           showing: true
         });
       }
-    },
-    async getData() {
-      let tags = await axios.get(ipBackend + "masterTags/list");
-
-      console.log(tags);
-      this.tags = tags.data.data;
-    },
-    async getSub() {
-      let sub = await axios.get(
-        ipBackend + "subKonten/listByKontenId/" + vm.kontenId
-      );
-
-      console.log(sub);
-      vm.subs = sub.data.data;
     }
   },
-  resetSub() {
-    vm.dataSub = {
-      file1: "",
-      modelSub: "",
-      judulSubKonten: "",
-      nomorSub: "",
-      textKonten: "",
-      linkSub: "",
-      namaGambar: ""
-    };
+  watch: {
+    data: async function(val) {
+      let vm = this;
+      if (val) {
+        let tags = await axios.get(
+          ipBackend + "masterTags/listByKontenId/" + val.id
+        );
+        vm.data.bulkTag = tags.data.data;
+        this.$forceUpdate();
+      }
+    }
   }
 };
 </script>

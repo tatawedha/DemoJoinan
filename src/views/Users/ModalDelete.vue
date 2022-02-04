@@ -27,7 +27,7 @@
 import axios from "axios";
 import { ipBackend } from "@/ipBackend";
 export default {
-  name: "ModalCloseMagang",
+  name: "ModalCloseUser",
   props: ["item"],
   data() {
     return {

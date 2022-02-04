@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">List Tags</dt>
+              <dt class="col-sm-10">LIST TAGS</dt>
               <dd class="col-sm-2">
                 <ModalAdd @go="alert($event)" />
               </dd>
@@ -72,7 +72,7 @@ import "moment/locale/id";
 
 const fields = [
   { key: "No", label: "No", _style: "width:1%" },
-  { key: "namamasterTags", label: "Nama Tags", _style: "min-width:20%;text-align:center" },
+  { key: "namamasterTags", label: "NAMA TAG", _style: "min-width:20%;text-align:center" },
   {
     key: "Actions",
     label: "",

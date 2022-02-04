@@ -137,7 +137,7 @@ export default {
         if (login.data.message == "sukses") {
           vm.button = "LOGIN";
           vm.busy = false;
-          localStorage.setItem("token", login.data.token);
+          localStorage.setItem("MosotoPassport", login.data.token);
           setToken(login.data.token);
           vm.myModal1 = true;
           vm.msg = "LOGIN BERHASIL";

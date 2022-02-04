@@ -47,7 +47,7 @@ export default {
         ipBackend + "subKonten/listByKontenId/" + vm.kontenId
       );
 
-      console.log(sub, "<< subpreview");
+      // console.log(sub, "<< subpreview");
       vm.subs = sub.data.data.map(item => {
         item.src = ipBackend + item.gambarSubKonten;
         return item;
@@ -58,7 +58,7 @@ export default {
   },
   watch: {
     change: function(newVal, oldVal) {
-      console.log(newVal);
+      // console.log(newVal);
       if (newVal != oldVal) {
         this.getSub();
       }

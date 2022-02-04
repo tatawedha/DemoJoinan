@@ -23,13 +23,13 @@ export default {
               items: [
                 {
                   _name: "CSidebarNavItem",
-                  name: "Users",
+                  name: "USERS",
                   to: "/Users",
                   icon: "cil-layers"
                 },
                 {
                   _name: "CSidebarNavItem",
-                  name: "Tags",
+                  name: "TAGS",
                   to: "/tags",
                   icon: "cil-layers"
                 }

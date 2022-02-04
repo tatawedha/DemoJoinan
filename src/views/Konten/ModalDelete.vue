@@ -8,7 +8,7 @@
     >
       <CIcon name="cil-trash" />
     </CButton>
-    <CModal title="Hapus Konten" size="none" :show.sync="myModal">
+    <CModal title="Hapus Konten" :show.sync="myModal">
       <H4>Apakah Anda Yakin Menghapus Data Konten Ini?</H4>
       <template #footer>
         <CCol col="6" class="text-center">

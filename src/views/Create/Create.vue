@@ -28,7 +28,7 @@
           <CCardBody>
             <CTabs fluid>
               <CTab title="Data Konten" active>
-                <Add :data="data" @alert="setSub($event)"></Add>
+                <Add :data="data" :tags="tags" @alert="setSub($event)"></Add>
               </CTab>
               <CTab title="Isi Konten" :disabled="kontenId == ''">
                 <AddSub
@@ -89,7 +89,7 @@ export default {
         modelKonten: "",
         file: "",
         bulkTag: [],
-        src:""
+        src: ""
       },
       search: "",
       kontenId: "",
@@ -164,7 +164,7 @@ export default {
       // console.log(x);
       let vm = this;
       vm.kontenId = x.id;
-      vm.kontenId = x.kontenId;
+      // vm.kontenId = x.kontenId;
       vm.data = x;
       vm.setSub(x);
       vm.change = !vm.change;
@@ -197,14 +197,20 @@ export default {
     },
     async getSub() {
       let vm = this;
-      vm.subs = [];
-      let sub = await axios.get(
-        ipBackend + "subKonten/listByKontenId/" + vm.kontenId
-      );
-      // console.log(sub.data.data, "<<");
-      sub.data.data.forEach(ele => {
-        vm.subs.push(ele);
-      });
+      // vm.subs = [];
+      // let sub = await axios.get(
+      //   ipBackend + "subKonten/listByKontenId/" + vm.kontenId
+      // );
+      // // console.log(sub.data.data, "<<");
+      // sub.data.data.forEach(ele => {
+      //   vm.subs.push(ele);
+      // });
+
+      // let tags = await axios.get(
+      //   ipBackend + "masterTags/listByKontenId/" + vm.kontenId
+      // );
+      // console.log(tags, "tagsss");
+      // vm.data.bulkTag = tags.data.data;
     }
   },
   watch: {
@@ -214,7 +220,7 @@ export default {
       }
     },
     search: function(val) {
-      let vm = this
+      let vm = this;
       if (val == null) {
         vm.data = {
           judulKonten: "",

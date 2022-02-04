@@ -92,7 +92,7 @@ const router = new Router({
   ]
 });
 
-var token = localStorage.getItem("token");
+var token = localStorage.getItem("MosotoPassport");
 router.beforeEach((to, from, next) => {
   // console.log(token, "<<");
   if (!token) {

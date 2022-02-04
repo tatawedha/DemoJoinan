@@ -8,7 +8,7 @@
     >
       <CIcon name="cil-trash" />
     </CButton>
-    <CModal title="Hapus Tags" size="none" :show.sync="myModal">
+    <CModal title="Hapus Tags"  :show.sync="myModal">
       <H4>Apakah Anda Yakin Menghapus Data Tags?</H4>
       <template #footer>
         <CCol col="6" class="text-center">

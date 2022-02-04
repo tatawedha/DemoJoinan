@@ -383,7 +383,7 @@ export default {
         ipBackend + "subKonten/listByKontenId/" + vm.kontenId
       );
 
-      console.log(sub, "<< sub");
+      // console.log(sub, "<< sub");
       vm.subs = sub.data.data;
       vm.subs.sort(function(a, b) {
         return a.nomorSub - b.nomorSub;

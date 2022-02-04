@@ -8,7 +8,7 @@ import { setToken } from "./store/utils/auth.js";
 export default {
   name: "App",
   mounted() {
-    setToken(localStorage.getItem("token"));
+    setToken(localStorage.getItem("MosotoPassport"));
   }
 };
 </script>
