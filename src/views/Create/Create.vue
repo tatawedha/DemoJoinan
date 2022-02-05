@@ -216,7 +216,7 @@ export default {
   watch: {
     kontenId: function(newVal, oldVal) {
       if (newVal != oldVal) {
-        this.getSub();
+        // this.getData();
       }
     },
     search: function(val) {

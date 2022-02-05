@@ -4,14 +4,14 @@
       <CCol align="right">
         <CButton
           color="success"
-          v-c-tooltip="'Tambah Pasien'"
+          v-c-tooltip="'Tambah Tag'"
           @click="myModal = true"
           class="mr-1"
         >
           Tambah Data
         </CButton>
       </CCol>
-      <CModal title="Register Pasien " size="lg" :show.sync="myModal">
+      <CModal title="REGISTER TAG KONTEN " size="lg" :show.sync="myModal">
         <CRow>
           <CCol>
             <CForm>
@@ -19,6 +19,7 @@
                 label="Nama Tags"
                 horizontal
                 :value.sync="data.namamasterTags"
+                @keydown.enter.prevent="regis()"
               />
             </CForm>
           </CCol>

@@ -60,12 +60,12 @@ export default {
                 }
               ]
             },
-            // {
-            //   _name: "CSidebarNavItem",
-            //   name: "Jadwal",
-            //   to: "/jadwal",
-            //   icon: "cil-layers"
-            // },
+            {
+              _name: "CSidebarNavItem",
+              name: "LOG",
+              to: "/log",
+              icon: "cil-layers"
+            },
             {
               _name: "CSidebarNavDivider"
             },

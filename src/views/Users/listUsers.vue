@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">DAFTAR PASIEN</dt>
+              <dt class="col-sm-10">LIST USER</dt>
               <dd class="col-sm-2">
                 <ModalAdd @go="alert($event)" />
               </dd>

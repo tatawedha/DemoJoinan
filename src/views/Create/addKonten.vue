@@ -18,7 +18,7 @@
         <CCol class="col-md-3"><p class="mt-3">Tags</p> </CCol>
         <CCol class="col-md-9 pl-1 mt-2"
           ><multiselect
-            v-model="data.bulkTag"
+            v-model="bulkTag"
             :options="tags"
             :multiple="true"
             :searchable="true"
@@ -92,6 +92,8 @@ export default {
       busy: false,
       variant: "",
       namaGambar:"",
+      bulkTag:[],
+      file:"",
       kate: [
         { value: "", label: "" },
         { value: "Absurb", label: "Absurb" },
@@ -111,8 +113,8 @@ export default {
   computed: {
     bulkT() {
       let vm = this;
-      if (vm.data.bulkTag != []) {
-        return vm.data.bulkTag.map(item => {
+      if (vm.bulkTag != []) {
+        return vm.bulkTag.map(item => {
           return { masterTagId: item.id };
         });
       }
@@ -123,15 +125,15 @@ export default {
   },
   methods: {
     handleFile() {
-      this.data.file = this.$refs.file.$data.state[0];
+      this.file = this.$refs.file.$data.state[0];
       this.namaGambar = this.$refs.file.$data.state[0].name
       resizeImage({
-        file: this.data.file,
+        file: this.file,
         maxSize: 700
       })
         .then(res => {
           console.log(res, this.namaGambar);
-          this.data.file = res;
+          this.file = res;
           this.data.src = URL.createObjectURL(res);
         })
         .catch(err => {
@@ -146,7 +148,7 @@ export default {
       let vm = this;
       let formData = new FormData();
       //   console.log(vm.bulkT);
-      formData.append("file1", vm.data.file);
+      formData.append("file1", vm.file);
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);
       formData.append("modelKonten", vm.data.modelKonten);
@@ -185,7 +187,9 @@ export default {
       let formData = new FormData();
       // console.log(vm.bulkT);
       formData.append("kontenId", vm.data.id);
-      formData.append("file1", vm.data.file, vm.namaGambar );
+      if(vm.file != ""){
+        formData.append("file1", vm.file, vm.namaGambar );
+      }
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);
       formData.append("modelKonten", vm.data.modelKonten);
@@ -227,9 +231,11 @@ export default {
       if (val) {
         let tags = await axios.get(
           ipBackend + "masterTags/listByKontenId/" + val.id
-        );
-        vm.data.bulkTag = tags.data.data;
-        this.$forceUpdate();
+        )
+          vm.bulkTag = tags.data.data;
+        console.log(tags.data.data)
+        
+        // this.$forceUpdate();
       }
     }
   }

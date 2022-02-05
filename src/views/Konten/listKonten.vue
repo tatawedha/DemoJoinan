@@ -36,7 +36,7 @@
                     <td class="d-flex">
                       <!-- <ModalListA :item="item" @go="alert($event)" />
                       <ModalEdit :item="item" @go="alert($event)" /> -->
-                      <ModalDelete :item="item" @go="alert($event)" />
+                      <!-- <ModalDelete :item="item" @go="alert($event)" /> -->
                       {{item.actions}}
                     </td>
                   </template>
