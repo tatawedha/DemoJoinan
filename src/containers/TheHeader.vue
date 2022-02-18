@@ -29,7 +29,7 @@
           Settings
         </CHeaderNavLink>
       </CHeaderNavItem>
-    </CHeaderNav>
+    </CHeaderNav> -->
     <CHeaderNav>
       <CHeaderNavItem class="px-3 c-d-legacy-none">
         <button
@@ -40,21 +40,21 @@
           <CIcon v-else name="cil-moon"/>
         </button>
       </CHeaderNavItem>
-      <TheHeaderDropdownNotif/>
+      <!-- <TheHeaderDropdownNotif/>
       <TheHeaderDropdownTasks/>
       <TheHeaderDropdownMssgs/>
-      <TheHeaderDropdownAccnt/>
-      <CHeaderNavItem class="px-3">
+      <TheHeaderDropdownAccnt/> -->
+      <!-- <CHeaderNavItem class="px-3">
         <button
           class="c-header-nav-btn"
           @click="$store.commit('toggle', 'asideShow')"
         >
           <CIcon size="lg" name="cil-applications-settings" class="mr-2"/>
         </button>
-      </CHeaderNavItem>
+      </CHeaderNavItem> -->
     </CHeaderNav>
 
-    <CSubheader class="px-3">
+    <!-- <CSubheader class="px-3">
       <CBreadcrumbRouter class="border-0 mb-0"/>
     </CSubheader> -->
   </CHeader>
