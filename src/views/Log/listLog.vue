@@ -19,7 +19,7 @@
                   :fields="fields"
                   column-filter
                   items-per-page-select
-                  :items-per-page="15"
+                  :items-per-page="100"
                   hover
                   sorter
                   pagination
@@ -29,14 +29,15 @@
                   <template #No="{index}">
                     <td class="text-center">{{ index + 1 }}</td>
                   </template>
-                  <template #golonganDarah="{item}">
-                    <td class="text-center">{{ item.golonganDarah }}</td>
+                  <template #tanggal="{item}">
+                    <td class="text-center">{{ moment(item.tanggal).format('ll') }}</td>
                   </template>
                   <template #Actions="{item}">
                     <td class="d-flex">
-                      <ModalListA :item="item" @go="alert($event)" />
-                      <ModalEdit :item="item" @go="alert($event)" />
-                      <ModalDelete :item="item" @go="alert($event)" />
+                      <!-- <ModalListA :item="item" @go="alert($event)" /> -->
+                      <!-- <ModalEdit :item="item" @go="alert($event)" /> -->
+                      <!-- <ModalDelete :item="item" @go="alert($event)" /> -->
+                      {{item.actions}}
                     </td>
                   </template>
                 </CDataTable>
@@ -69,21 +70,21 @@ import ModalAdd from "@/views/Users/ModalAdd";
 import ModalDelete from "@/views/Users/ModalDelete";
 import ModalEdit from "@/views/Users/ModalEdit";
 // import ModalDetail from "@/views/Users/ModalDetail";
-import ModalListA from "@/views/Users/ModalListA";
+// import ModalListA from "@/views/Users/ModalListA";
 import moment from "moment";
 import "moment/locale/id";
 
 const fields = [
   { key: "No", label: "No", _style: "width:1%" },
-  { key: "nama", label: "Nama", _style: "min-width:20%;text-align:center" },
+  { key: "judulKonten", label: "Judul", _style: "min-width:20%;text-align:center" },
   {
-    key: "jenisKelamin",
-    label: "Jenis Kelamin",
+    key: "kegiatan",
+    label: "Kegiatan",
     _style: "min-width:10%;text-align:center"
   },
-  { key: "golonganDarah", label: "Gol. Darah", _style: "width:7%" },
-  { key: "beratBadan", label: "BB", _style: "width:5%" },
-  { key: "tinggiBadan", label: "TB", _style: "width:5%" },
+  { key: "tanggal", label: "Tanggal", _style: "width:20%" },
+  // { key: "beratBadan", label: "BB", _style: "width:5%" },
+  // { key: "tinggiBadan", label: "TB", _style: "width:5%" },
   {
     key: "Actions",
     label: "",
@@ -113,10 +114,11 @@ export default {
     ModalAdd,
     ModalDelete,
     ModalEdit,
-    ModalListA
+    // ModalListA
   },
   data() {
     return {
+      moment,
       usersData: [],
       fields,
       hapus: false,
@@ -127,7 +129,7 @@ export default {
     };
   },
   created() {
-    this.getPasien();
+    this.getLog();
   },
   methods: {
     show() {
@@ -141,7 +143,7 @@ export default {
       }
     },
     async getLog() {
-      let log = await axios.get(ipBackend + "users/list");
+      let log = await axios.get(ipBackend + "log/list");
       console.log(log.data.data);
       this.usersData = log.data.data.map(item => {
         return { ...item };

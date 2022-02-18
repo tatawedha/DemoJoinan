@@ -100,13 +100,15 @@ export default {
         { value: "Story", label: "Story" },
         { value: "History", label: "History" },
         { value: "Edukasi", label: "Edukasi" },
-        { value: "30s F", label: "30s Fact" }
+        { value: "30s F", label: "30s Fact" },
+        { value: "Something", label:"Something"},
+        { value: "Pengumuman", label:"Pengumuman"}
       ],
       model: [
         { value: "", label: "" },
         { value: "List", label: "List" },
         { value: "30Seconds", label: "30Seconds" },
-        { value: "Artikel", label: "Artikel" }
+        { value: "Artikel", label: "Artikel" },
       ]
     };
   },
@@ -132,7 +134,7 @@ export default {
         maxSize: 700
       })
         .then(res => {
-          console.log(res, this.namaGambar);
+          // console.log(res, this.namaGambar);
           this.file = res;
           this.data.src = URL.createObjectURL(res);
         })
@@ -154,11 +156,12 @@ export default {
       formData.append("modelKonten", vm.data.modelKonten);
       formData.append("bulkTagString", JSON.stringify(vm.bulkT));
       let regis = await axios.post(ipBackend + "konten/register", formData);
-      console.log(regis.data.data.id, "ini");
+      // console.log(regis.data.data.id, "ini");
 
       if (regis.data.status == 200) {
         if (regis.data.message == "sukses") {
           vm.busy = false;
+          vm.file= ""
           vm.$emit("alert", {
             variant: "success",
             msg: "BERHASIL MENAMBAH KONTEN BARU",
@@ -193,14 +196,13 @@ export default {
       formData.append("judulKonten", vm.data.judulKonten);
       formData.append("typeKonten", vm.data.typeKonten);
       formData.append("modelKonten", vm.data.modelKonten);
-      if (vm.bulkT.length) {
         formData.append("bulkTagString", JSON.stringify(vm.bulkT));
-      }
       let regis = await axios.post(ipBackend + "konten/update", formData);
-      console.log(regis.data.data, "ini update");
+      // console.log(regis.data.data, "ini update");
       if (regis.data.status == 200) {
         if (regis.data.message == "sukses") {
           vm.busy = false;
+          vm.file= ""
           vm.$emit("alert", {
             variant: "success",
             msg: "BERHASIL MENGUPDATE KONTEN ",

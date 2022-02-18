@@ -25,13 +25,13 @@ export default {
                   _name: "CSidebarNavItem",
                   name: "USERS",
                   to: "/Users",
-                  icon: "cil-layers"
+                  icon: "cil-user"
                 },
                 {
                   _name: "CSidebarNavItem",
                   name: "TAGS",
                   to: "/tags",
-                  icon: "cil-layers"
+                  icon: "cil-tags"
                 }
               ]
             },
@@ -44,19 +44,19 @@ export default {
                   _name: "CSidebarNavItem",
                   name: "Create",
                   to: "/Create",
-                  icon: "cil-layers"
+                  icon: "cil-notes"
                 },
                 {
                   _name: "CSidebarNavItem",
                   name: "New",
                   to: "/new",
-                  icon: "cil-layers"
+                  icon: "cil-list-rich"
                 },
                 {
                   _name: "CSidebarNavItem",
                   name: "Popular",
                   to: "/tags",
-                  icon: "cil-layers"
+                  icon: "cil-star"
                 }
               ]
             },
@@ -64,7 +64,7 @@ export default {
               _name: "CSidebarNavItem",
               name: "LOG",
               to: "/log",
-              icon: "cil-layers"
+              icon: "cil-applications-settings"
             },
             {
               _name: "CSidebarNavDivider"

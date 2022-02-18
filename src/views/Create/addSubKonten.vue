@@ -44,11 +44,11 @@
             :placeholder="place()"
           />
         </CForm>
-        <CRow v-if="src1 != ''" class="mb-4">
+        <CRow v-if="src != ''" class="mb-4">
           <CCol class="col-md-3"></CCol>
           <CCol class="col-md-9">
             <center>
-              <CImg :src="src1" style="max-height: 200px; max-width:500px;" />
+              <CImg v-if="src" :src="src" style="max-height: 200px; max-width:500px;" />
             </center>
           </CCol>
         </CRow>
@@ -84,7 +84,7 @@
               color="success"
               :disabled="busy"
             >
-              <CSpinner v-if="busy" size="sm" /> Update</CButton
+              <CSpinner v-if="busy" size="sm" /> UPDATE</CButton
             >
           </CCol>
           <CCol></CCol>
@@ -100,7 +100,7 @@
                 <CButton
                   color="warning"
                   v-c-tooltip="'Edit Sub Konten'"
-                  @click="dataSub = item"
+                  @click="dataSub = item, src= ipBackend + item.gambarSubKonten"
                   class="mr-1"
                 >
                   <CIcon name="cil-pencil" />
@@ -154,39 +154,7 @@ export default {
   props: ["kontenId"],
   data() {
     return {
-      toolbarSettings: {
-        type: "MultiRow",
-        items: [
-          "Bold",
-          "Italic",
-          "Underline",
-          "StrikeThrough",
-          "FontName",
-          "FontSize",
-          "FontColor",
-          "BackgroundColor",
-          "LowerCase",
-          "UpperCase",
-          "|",
-          "Formats",
-          "Alignments",
-          "OrderedList",
-          "UnorderedList",
-          "Outdent",
-          "Indent",
-          "|",
-          "CreateLink",
-          "Image",
-          "|",
-          "ClearFormat",
-          "Print",
-          "SourceCode",
-          "FullScreen",
-          "|",
-          "Undo",
-          "Redo"
-        ]
-      },
+      ipBackend,
       subs: [],
       dataSub: {
         file1: "",
@@ -195,8 +163,8 @@ export default {
         nomorSub: "",
         textKonten: "",
         linkSub: "",
-        namaGambar: ""
       },
+      namaGambar: "",
       tipe: [
         { value: "", label: "" },
         { value: "Artikel", label: "Artikel" },
@@ -227,7 +195,7 @@ export default {
         }
       ],
       busy: false,
-      src1: "",
+      src: "",
       myModal: false
     };
   },
@@ -240,13 +208,14 @@ export default {
     },
     handleFile1() {
       this.dataSub.file1 = this.$refs.file1.$data.state[0];
+      this.namaGambar = this.$refs.file1.$data.state[0].name
       resizeImage({
         file: this.dataSub.file1,
         maxSize:700,
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.dataSub.file1 = res
-        this.dataSub.src = URL.createObjectURL(res);
+        this.src = URL.createObjectURL(res);
       }).catch(err=>{
         console.log(err)
       })
@@ -259,7 +228,7 @@ export default {
       let vm = this;
       let formData = new FormData();
       if (vm.dataSub.file1) {
-        formData.append("file1", vm.dataSub.file1);
+        formData.append("file1", vm.dataSub.file1, vm.namaGambar);
       }
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
       formData.append("textKonten", vm.dataSub.textKonten);
@@ -303,7 +272,7 @@ export default {
       let vm = this;
       let formData = new FormData();
       if (vm.dataSub.file1 != "") {
-        formData.append("file1", vm.dataSub.file1);
+        formData.append("file1", vm.dataSub.file1, vm.namaGambar);
       }
       formData.append("id", vm.dataSub.id);
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
