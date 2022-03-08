@@ -17,7 +17,9 @@
                 <center>
                   <img :src="item.src" style="max-width:600px;max-height:400px" />
                 </center>
+                <div v-html="item.textKonten"></div>
               </div>
+              
             </div>
           </CCardBody>
         </CCard>

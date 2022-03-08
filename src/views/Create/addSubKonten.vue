@@ -227,7 +227,7 @@ export default {
     async regisSub() {
       let vm = this;
       let formData = new FormData();
-      if (vm.dataSub.file1) {
+      if (vm.dataSub.tipeSub == 'Gambar') {
         formData.append("file1", vm.dataSub.file1, vm.namaGambar);
       }
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
@@ -273,6 +273,8 @@ export default {
       let formData = new FormData();
       if (vm.dataSub.file1 != "") {
         formData.append("file1", vm.dataSub.file1, vm.namaGambar);
+      }else{
+
       }
       formData.append("id", vm.dataSub.id);
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
