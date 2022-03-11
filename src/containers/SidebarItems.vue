@@ -55,7 +55,7 @@ export default {
                 {
                   _name: "CSidebarNavItem",
                   name: "Popular",
-                  to: "/tags",
+                  to: "/populer",
                   icon: "cil-star"
                 }
               ]

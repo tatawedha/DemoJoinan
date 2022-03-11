@@ -16,7 +16,8 @@ const Users = () => import("@/views/Users/listUsers");
 const Tags = () => import("@/views/Tags/listTags");
 const Create = () => import("@/views/Create/Create");
 const Log = () => import ("@/views/Log/listLog")
-const newKonten = () => import("@/views/Konten/listKonten");
+const newKonten = () => import("@/views/Konten/listNew");
+const populer = () => import("@/views/Konten/listPopuler");
 
 Vue.use(Router);
 
@@ -65,6 +66,11 @@ const router = new Router({
           path: "new",
           name: "New",
           component: newKonten
+        },
+        {
+          path: "populer",
+          name: "Populer",
+          component: populer
         },
         {
           path: "log",

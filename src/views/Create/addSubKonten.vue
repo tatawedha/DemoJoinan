@@ -48,7 +48,11 @@
           <CCol class="col-md-3"></CCol>
           <CCol class="col-md-9">
             <center>
-              <CImg v-if="src" :src="src" style="max-height: 200px; max-width:500px;" />
+              <CImg
+                v-if="src"
+                :src="src"
+                style="max-height: 200px; max-width:500px;"
+              />
             </center>
           </CCol>
         </CRow>
@@ -61,9 +65,8 @@
         <CRow>
           <CCol class="col-md-3 pt-4 mt-4">Konten</CCol>
           <CCol class="col-md-9 pl-2"
-            ><VueEditor
-              v-model="dataSub.textKonten"
-          ></VueEditor></CCol>
+            ><VueEditor v-model="dataSub.textKonten"></VueEditor
+          ></CCol>
         </CRow>
         <CRow class="mb-3 mt-4">
           <CCol></CCol>
@@ -100,7 +103,9 @@
                 <CButton
                   color="warning"
                   v-c-tooltip="'Edit Sub Konten'"
-                  @click="dataSub = item, src= ipBackend + item.gambarSubKonten"
+                  @click="
+                  setDataSub(item), (src = ipBackend + item.gambarSubKonten)
+                  "
                   class="mr-1"
                 >
                   <CIcon name="cil-pencil" />
@@ -109,7 +114,7 @@
                   color="danger"
                   v-c-tooltip="'Hapus Konten'"
                   class="mr-1"
-                  @click="myModal = true, dataSub = item"
+                  @click="(myModal = true), (dataSub = item)"
                 >
                   <CIcon name="cil-trash" />
                 </CButton>
@@ -146,11 +151,11 @@ import { VueEditor, Quill } from "vue2-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import {resizeImage} from "@/resize.js"
+import { resizeImage } from "@/resize.js";
 
 Vue.use(VueQuillEditor);
 export default {
-  components: { Multiselect, VueEditor},
+  components: { Multiselect, VueEditor },
   props: ["kontenId"],
   data() {
     return {
@@ -162,7 +167,7 @@ export default {
         judulSubKonten: "",
         nomorSub: "",
         textKonten: "",
-        linkSub: "",
+        linkSub: ""
       },
       namaGambar: "",
       tipe: [
@@ -176,20 +181,20 @@ export default {
         {
           key: "judulSubKonten",
           label: "Judul",
-          _style: "min-width:20%"
+          // _style: "min-width:20%"
         },
         {
           key: "tipeSub",
           label: "Model",
-          _style: "min-width:10%"
+          // _style: "min-width:10%"
         },
-        { key: "namaGambar", label: "Nama Gambar", _style: "width:10%" },
-        { key: "linkSub", label: "Link", _style: "width:20%" },
-        { key: "kreatorId", label: "Kreator", _style: "width:10%" },
+        { key: "namaGambar", label: "Nama Gambar" },
+        // { key: "linkSub", label: "Link", _style: "width:20%" },
+        // { key: "kreatorId", label: "Kreator", _style: "width:10%" },
         {
           key: "Actions",
           label: "Actions",
-          _style: "max-width:5%",
+          // _style: "max-width:5%",
           sorter: false,
           filter: false
         }
@@ -208,26 +213,34 @@ export default {
     },
     handleFile1() {
       this.dataSub.file1 = this.$refs.file1.$data.state[0];
-      this.namaGambar = this.$refs.file1.$data.state[0].name
+      this.namaGambar = this.$refs.file1.$data.state[0].name;
       resizeImage({
         file: this.dataSub.file1,
-        maxSize:700,
-      }).then(res=>{
-        // console.log(res)
-        this.dataSub.file1 = res
-        this.src = URL.createObjectURL(res);
-      }).catch(err=>{
-        console.log(err)
+        maxSize: 700
       })
+        .then(res => {
+          // console.log(res)
+          this.dataSub.file1 = res;
+          this.src = URL.createObjectURL(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    place() {},
+    setDataSub(x) {
+      this.dataSub = x
+      this.dataSub.file1 = ""
+    },
+    place(){
+
+    },
     // async regis() {
     //   let konten = await axios.post(ipBackend + "konten/register");
     // },
     async regisSub() {
       let vm = this;
       let formData = new FormData();
-      if (vm.dataSub.tipeSub == 'Gambar') {
+      if (vm.dataSub.tipeSub == "Gambar") {
         formData.append("file1", vm.dataSub.file1, vm.namaGambar);
       }
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
@@ -271,10 +284,10 @@ export default {
     async updateSub() {
       let vm = this;
       let formData = new FormData();
+      console.log(this.dataSub.file1)
       if (vm.dataSub.file1 != "") {
         formData.append("file1", vm.dataSub.file1, vm.namaGambar);
-      }else{
-
+      } else {
       }
       formData.append("id", vm.dataSub.id);
       formData.append("judulSubKonten", vm.dataSub.judulSubKonten);
@@ -313,7 +326,7 @@ export default {
     },
     async hapus() {
       let vm = this;
-      vm.busy = true
+      vm.busy = true;
       let hapus = await axios.post(ipBackend + "subKonten/delete", vm.dataSub);
       console.log(hapus);
       if (hapus.data.status == 200) {
@@ -371,13 +384,19 @@ export default {
         linkSub: "",
         namaGambar: ""
       };
+      vm.src = ""
     }
   },
 
   watch: {
     kontenId: function(newVal, oldVal) {
+      console.log("old", oldVal, "new", newVal);
       if (newVal != oldVal) {
-        this.getSub();
+        if (newVal == "") {
+          this.subs = [];
+        } else {
+          this.getSub();
+        }
       }
     }
   }

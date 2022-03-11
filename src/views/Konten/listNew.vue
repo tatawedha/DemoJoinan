@@ -5,7 +5,7 @@
         <CCard>
           <CCardHeader>
             <dl class="row">
-              <dt class="col-sm-10">ALL KONTEN</dt>
+              <dt class="col-sm-10">NEW KONTEN</dt>
               <dd class="col-sm-2">
                 <!-- <ModalAdd @go="alert($event)" /> -->
               </dd>
@@ -143,7 +143,7 @@ export default {
       }
     },
     async getKonten() {
-      let konten = await axios.get(ipBackend + "konten/list");
+      let konten = await axios.get(ipBackend + "konten/listNew");
       console.log(konten.data.data);
       this.newKonten = konten.data.data.map(item => {
         return { ...item };

@@ -5,21 +5,29 @@
         <CCard>
           <CCardBody>
             <CCardBody>
-              <!-- <b-form-group label-cols-md="3"> -->
-              <!-- <template v-slot:label>
-                Kelurahan <span class="text-danger">*</span>
-              </template> -->
-              <multiselect
-                v-model="search"
-                :options="konten"
-                :multiple="false"
-                :searchable="true"
-                :close-on-select="true"
-                :show-labels="false"
-                label="judulKonten"
-                track-By="kontenId"
-                placeholder="-- Cari Judul --"
-              ></multiselect>
+              <CRow class="mb-4">
+                <CCol>
+                  <multiselect
+                    v-model="search"
+                    :options="konten"
+                    :multiple="false"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="false"
+                    label="judulKonten"
+                    track-By="kontenId"
+                    placeholder="-- Cari Judul --"
+                  ></multiselect>
+                </CCol>
+              </CRow>
+              <!-- <CRow>
+                <CCol>
+                  <CButton color="primary" @click="clear()">
+                    CLEAR
+                  </CButton>
+                </CCol>
+              </CRow> -->
+
               <!-- </b-form-group> -->
             </CCardBody>
           </CCardBody>
@@ -229,6 +237,7 @@ export default {
           file: "",
           bulkTag: ""
         };
+        vm.kontenId = ""
       } else {
         vm.setKonten(vm.search);
       }
