@@ -89,12 +89,16 @@
 
       <CModal
         title="Terjadi Kesalahan"
-        size="sm"
         :show.sync="myModal2"
         hide-footer
         centered
       >
-        <h4 class="text-strong text-warning mt-4 mb-4">{{ msg }}</h4>
+      <CRow>
+        <CCol class="text-center">
+          <h4 class="text-strong text-warning mt-4 mb-4">{{ msg }}</h4>
+        </CCol>
+      </CRow>
+        
         <template #footer-wrapper> <span></span> </template>
       </CModal>
     </CContainer>
@@ -139,9 +143,7 @@ export default {
           vm.busy = false;
           localStorage.setItem("MosotoPassport", login.data.token);
           setToken(login.data.token);
-          vm.myModal1 = true;
-          vm.msg = "LOGIN BERHASIL";
-          vm.color = "success";
+          this.$router.push({ path: "/" });
         } else {
           vm.button = "LOGIN";
           vm.busy = false;
