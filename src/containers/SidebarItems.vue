@@ -21,12 +21,12 @@ export default {
               name: "DATA MASTER",
               icon: "cil-layers",
               items: [
-                {
-                  _name: "CSidebarNavItem",
-                  name: "USERS",
-                  to: "/Users",
-                  icon: "cil-user"
-                },
+                // {
+                //   _name: "CSidebarNavItem",
+                //   name: "USERS",
+                //   to: "/Users",
+                //   icon: "cil-user"
+                // },
                 {
                   _name: "CSidebarNavItem",
                   name: "TAGS",
